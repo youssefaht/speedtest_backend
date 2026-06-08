@@ -35,14 +35,12 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
     .nav-links a:hover { color: var(--accent); }
 
-    /* TOP NORD BANNER */
     .nord-banner {
       position: relative; z-index: 5;
       display: flex; align-items: center; justify-content: center; gap: 12px;
       padding: 10px 20px;
       background: linear-gradient(90deg, rgba(30,10,60,0.9), rgba(0,20,50,0.9));
-      border-bottom: 1px solid rgba(124,58,237,0.3);
-      font-size: 13px;
+      border-bottom: 1px solid rgba(124,58,237,0.3); font-size: 13px;
     }
     .nord-banner .nord-logo { font-weight: 800; color: #4FFFB0; font-size: 15px; }
     .nord-banner .nord-text { color: var(--muted); }
@@ -53,19 +51,46 @@
     }
     .nord-banner .nord-cta:hover { opacity: 0.85; }
 
-    .hero { position: relative; z-index: 5; text-align: center; padding: 60px 24px 30px; }
+    .hero { position: relative; z-index: 5; text-align: center; padding: 50px 24px 20px; }
     .hero-label {
       display: inline-block; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.3);
       color: var(--accent); padding: 4px 14px; border-radius: 100px;
       font-size: 12px; font-weight: 600; letter-spacing: 2px; margin-bottom: 20px;
     }
-    .hero h1 { font-size: clamp(32px, 5vw, 52px); font-weight: 800; line-height: 1.1; }
+    .hero h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 800; line-height: 1.1; }
     .hero h1 .highlight { color: var(--accent); }
     .hero p { color: var(--muted); margin-top: 12px; font-size: 16px; }
 
+    /* SERVER SELECTOR */
+    .server-select-wrap {
+      position: relative; z-index: 5;
+      max-width: 620px; margin: 20px auto 0;
+      padding: 0 16px;
+    }
+    .server-label { font-size: 12px; color: var(--muted); letter-spacing: 1px; font-weight: 600; margin-bottom: 10px; }
+    .server-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    @media (max-width: 480px) { .server-grid { grid-template-columns: repeat(2, 1fr); } }
+    .server-btn {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 8px; text-align: center;
+      cursor: pointer; transition: all 0.2s; font-family: 'Syne', sans-serif;
+    }
+    .server-btn:hover { border-color: var(--muted); }
+    .server-btn.active { border-color: var(--accent); background: rgba(0,229,255,0.07); }
+    .server-flag { font-size: 20px; }
+    .server-name { font-size: 12px; font-weight: 700; margin-top: 4px; color: var(--text); }
+    .server-loc { font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .server-ping-badge {
+      font-family: 'DM Mono', monospace; font-size: 10px;
+      margin-top: 4px; color: var(--muted);
+    }
+    .server-ping-badge.good { color: var(--green); }
+    .server-ping-badge.ok { color: var(--orange); }
+    .server-ping-badge.bad { color: var(--red); }
+
     .test-card {
       position: relative; z-index: 5;
-      max-width: 620px; margin: 30px auto 20px;
+      max-width: 620px; margin: 16px auto 20px;
       background: var(--surface); padding: 36px;
       border-radius: 24px; border: 1px solid var(--border);
       box-shadow: 0 0 60px rgba(0,229,255,0.04);
@@ -133,18 +158,11 @@
     .result-title { font-size: 18px; font-weight: 800; margin: 8px 0 4px; }
     .result-desc { font-size: 13px; color: var(--muted); }
 
-    /* NORD AFFILIATE CARD - يظهر دائماً بعد الاختبار */
     .nord-card {
       display: none; margin-top: 16px;
       background: linear-gradient(135deg, #0d0822, #0a1a2e);
       border: 1px solid rgba(79,255,176,0.25);
-      border-radius: 16px; padding: 22px;
-      position: relative; overflow: hidden;
-    }
-    .nord-card::before {
-      content: ''; position: absolute; top: -40px; right: -40px;
-      width: 120px; height: 120px;
-      background: rgba(79,255,176,0.06); border-radius: 50%;
+      border-radius: 16px; padding: 22px; position: relative; overflow: hidden;
     }
     .nord-card.show { display: block; }
     .nord-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
@@ -157,22 +175,17 @@
     .nord-card-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
     .nord-card-desc { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
     .nord-card-features { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-    .nord-feat {
-      background: rgba(255,255,255,0.05); border-radius: 6px;
-      padding: 4px 10px; font-size: 11px; color: var(--muted);
-    }
+    .nord-feat { background: rgba(255,255,255,0.05); border-radius: 6px; padding: 4px 10px; font-size: 11px; color: var(--muted); }
     .nord-btn {
       display: block; text-align: center;
       background: linear-gradient(135deg, #4FFFB0, #00cc88);
       color: #050810; font-weight: 800; font-size: 14px;
-      padding: 13px; border-radius: 10px;
-      text-decoration: none; transition: opacity 0.2s;
+      padding: 13px; border-radius: 10px; text-decoration: none; transition: opacity 0.2s;
     }
     .nord-btn:hover { opacity: 0.88; }
     .nord-disclaimer { font-size: 10px; color: var(--muted); margin-top: 8px; text-align: center; }
 
-    /* HISTORY */
-    .history-section { position: relative; z-index: 5; max-width: 620px; margin: 0 auto 40px; }
+    .history-section { position: relative; z-index: 5; max-width: 620px; margin: 0 auto 40px; padding: 0 16px; }
     .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; padding: 0 4px; }
     .history-table { width: 100%; border-collapse: collapse; }
     .history-table th {
@@ -200,7 +213,7 @@
     @media (max-width: 600px) {
       nav { padding: 16px 20px; }
       .nav-links { display: none; }
-      .test-card { margin: 20px 0; padding: 24px 16px; }
+      .test-card { margin: 16px 0; padding: 24px 16px; }
       .nord-banner { flex-wrap: wrap; gap: 6px; font-size: 12px; }
     }
   </style>
@@ -210,7 +223,6 @@
 <div class="orb orb-1"></div>
 <div class="orb orb-2"></div>
 
-<!-- TOP NORDVPN BANNER -->
 <div class="nord-banner">
   <span class="nord-logo">NordVPN</span>
   <span class="nord-text">🛡️ Protect your connection & boost privacy</span>
@@ -231,11 +243,60 @@
 <div class="hero">
   <div class="hero-label">FREE & ACCURATE</div>
   <h1>Test Your <span class="highlight">Real Internet Speed</span></h1>
-  <p>Download · Upload · Ping — no plugins, no tricks</p>
+  <p>Download · Upload · Ping — choose your server</p>
+</div>
+
+<!-- SERVER SELECTOR -->
+<div class="server-select-wrap">
+  <div class="server-label">🌍 SELECT SERVER</div>
+  <div class="server-grid" id="serverGrid">
+
+    <div class="server-btn active" onclick="selectServer(this, 'https://pingtest.vercel.app', 'My Server')">
+      <div class="server-flag">⚡</div>
+      <div class="server-name">My Server</div>
+      <div class="server-loc">Custom</div>
+      <div class="server-ping-badge" id="ping-myserver">—</div>
+    </div>
+
+    <div class="server-btn" onclick="selectServer(this, 'https://speed.cloudflare.com', 'Cloudflare')">
+      <div class="server-flag">🌐</div>
+      <div class="server-name">Cloudflare</div>
+      <div class="server-loc">Global</div>
+      <div class="server-ping-badge" id="ping-cloudflare">—</div>
+    </div>
+
+    <div class="server-btn" onclick="selectServer(this, 'https://www.google.com', 'Google')">
+      <div class="server-flag">🇺🇸</div>
+      <div class="server-name">Google</div>
+      <div class="server-loc">USA</div>
+      <div class="server-ping-badge" id="ping-google">—</div>
+    </div>
+
+    <div class="server-btn" onclick="selectServer(this, 'https://www.amazon.fr', 'Amazon EU')">
+      <div class="server-flag">🇫🇷</div>
+      <div class="server-name">Amazon EU</div>
+      <div class="server-loc">Paris</div>
+      <div class="server-ping-badge" id="ping-amazon">—</div>
+    </div>
+
+    <div class="server-btn" onclick="selectServer(this, 'https://www.microsoft.com', 'Microsoft')">
+      <div class="server-flag">🇳🇱</div>
+      <div class="server-name">Microsoft</div>
+      <div class="server-loc">Europe</div>
+      <div class="server-ping-badge" id="ping-microsoft">—</div>
+    </div>
+
+    <div class="server-btn" onclick="selectServer(this, 'https://www.alibaba.com', 'Alibaba')">
+      <div class="server-flag">🇨🇳</div>
+      <div class="server-name">Alibaba</div>
+      <div class="server-loc">Asia</div>
+      <div class="server-ping-badge" id="ping-alibaba">—</div>
+    </div>
+
+  </div>
 </div>
 
 <div class="main-layout">
-
   <div class="test-card">
 
     <div class="gauge-wrap">
@@ -282,23 +343,19 @@
 
     <button class="btn-start" id="btnStart" onclick="startTest()">▶ START TEST</button>
 
-    <!-- RESULT -->
     <div class="result-box" id="resultBox">
       <div class="result-emoji" id="resultEmoji">🚀</div>
       <div class="result-title" id="resultTitle">—</div>
       <div class="result-desc" id="resultDesc">—</div>
     </div>
 
-    <!-- NORDVPN AFFILIATE CARD (يظهر بعد كل اختبار) -->
     <div class="nord-card" id="nordCard">
       <div class="nord-card-head">
         <div class="nord-card-logo">NordVPN</div>
         <div class="nord-card-badge" id="nordBadge">RECOMMENDED</div>
       </div>
       <div class="nord-card-title" id="nordCardTitle">Secure & speed up your connection</div>
-      <div class="nord-card-desc" id="nordCardDesc">
-        NordVPN can optimize your routing and protect your data from your ISP throttling.
-      </div>
+      <div class="nord-card-desc" id="nordCardDesc">NordVPN can optimize your routing and protect your data.</div>
       <div class="nord-card-features">
         <div class="nord-feat">✓ 30-day free trial</div>
         <div class="nord-feat">✓ No logs</div>
@@ -313,21 +370,17 @@
 
   </div>
 
-  <!-- HISTORY -->
   <div class="history-section">
     <div class="section-title">📊 Test History</div>
     <table class="history-table">
       <thead>
-        <tr>
-          <th>TIME</th><th>PING</th><th>DOWNLOAD</th><th>UPLOAD</th><th>RATING</th>
-        </tr>
+        <tr><th>TIME</th><th>SERVER</th><th>PING</th><th>DOWNLOAD</th><th>UPLOAD</th><th>RATING</th></tr>
       </thead>
       <tbody id="historyBody">
-        <tr><td colspan="5" style="color:var(--muted);font-size:13px;padding:20px;">No tests yet.</td></tr>
+        <tr><td colspan="6" style="color:var(--muted);font-size:13px;padding:20px;">No tests yet.</td></tr>
       </tbody>
     </table>
   </div>
-
 </div>
 
 <footer>
@@ -336,10 +389,62 @@
 </footer>
 
 <script>
-  // ✅ Backend الخاص بك على Vercel
-  const SERVER = "https://pingtest.vercel.app";
+  // السيرفرات المتاحة
+  const SERVERS = {
+    'https://pingtest.vercel.app': { name: 'My Server', isOwn: true },
+    'https://speed.cloudflare.com': { name: 'Cloudflare', isOwn: false },
+    'https://www.google.com': { name: 'Google', isOwn: false },
+    'https://www.amazon.fr': { name: 'Amazon EU', isOwn: false },
+    'https://www.microsoft.com': { name: 'Microsoft', isOwn: false },
+    'https://www.alibaba.com': { name: 'Alibaba', isOwn: false },
+  };
 
+  let currentServer = 'https://pingtest.vercel.app';
+  let currentServerName = 'My Server';
   let testHistory = [];
+
+  function selectServer(btn, url, name) {
+    document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentServer = url;
+    currentServerName = name;
+    document.getElementById('gaugePhase').textContent = 'SERVER: ' + name.toUpperCase();
+  }
+
+  // قياس ping لكل السيرفرات تلقائياً عند التحميل
+  const pingIds = {
+    'https://pingtest.vercel.app': 'ping-myserver',
+    'https://speed.cloudflare.com': 'ping-cloudflare',
+    'https://www.google.com': 'ping-google',
+    'https://www.amazon.fr': 'ping-amazon',
+    'https://www.microsoft.com': 'ping-microsoft',
+    'https://www.alibaba.com': 'ping-alibaba',
+  };
+
+  async function quickPing(url) {
+    try {
+      const t0 = performance.now();
+      await fetch(url, { mode: 'no-cors', cache: 'no-store' });
+      return Math.round(performance.now() - t0);
+    } catch { return null; }
+  }
+
+  async function pingAllServers() {
+    for (const [url, elId] of Object.entries(pingIds)) {
+      const el = document.getElementById(elId);
+      const ms = await quickPing(url);
+      if (ms === null) {
+        el.textContent = 'N/A';
+      } else {
+        el.textContent = ms + ' ms';
+        el.classList.remove('good','ok','bad');
+        if (ms < 100) el.classList.add('good');
+        else if (ms < 200) el.classList.add('ok');
+        else el.classList.add('bad');
+      }
+    }
+  }
+  pingAllServers();
 
   async function loadIP() {
     try {
@@ -377,51 +482,72 @@
     document.getElementById(id).classList.add("done");
   }
 
+  const isOwn = () => SERVERS[currentServer]?.isOwn;
+
   async function pingTest() {
+    const url = isOwn() ? currentServer + '/api/ping' : currentServer;
     const t0 = performance.now();
-    await fetch(SERVER + "/api/ping", { cache: "no-store" });
+    await fetch(url, { mode: isOwn() ? 'cors' : 'no-cors', cache: 'no-store' });
     return Math.round(performance.now() - t0);
   }
 
   async function downloadTest() {
-    const t0 = performance.now();
-    await fetch(SERVER + "/api/download", { cache: "no-store" });
-    const t1 = performance.now();
-    return (16 / ((t1 - t0) / 1000)).toFixed(2);
+    if (isOwn()) {
+      const t0 = performance.now();
+      await fetch(currentServer + '/api/download', { cache: 'no-store' });
+      return (16 / ((performance.now() - t0) / 1000)).toFixed(2);
+    } else if (currentServer.includes('cloudflare')) {
+      const t0 = performance.now();
+      await fetch('https://speed.cloudflare.com/__down?bytes=2000000', { cache: 'no-store' });
+      return (16 / ((performance.now() - t0) / 1000)).toFixed(2);
+    } else {
+      // للسيرفرات الأخرى نقيس فقط وقت الاستجابة
+      const t0 = performance.now();
+      await fetch(currentServer, { mode: 'no-cors', cache: 'no-store' });
+      const ms = performance.now() - t0;
+      return (1 / (ms / 1000)).toFixed(2);
+    }
   }
 
   async function uploadTest() {
-    const data = new Uint8Array(2 * 1024 * 1024);
-    const t0 = performance.now();
-    await fetch(SERVER + "/api/upload", { method: "POST", body: data, cache: "no-store" });
-    const t1 = performance.now();
-    return (16 / ((t1 - t0) / 1000)).toFixed(2);
+    if (isOwn()) {
+      const data = new Uint8Array(2 * 1024 * 1024);
+      const t0 = performance.now();
+      await fetch(currentServer + '/api/upload', { method: 'POST', body: data, cache: 'no-store' });
+      return (16 / ((performance.now() - t0) / 1000)).toFixed(2);
+    } else if (currentServer.includes('cloudflare')) {
+      const data = new Uint8Array(2 * 1024 * 1024);
+      const t0 = performance.now();
+      await fetch('https://speed.cloudflare.com/__up', { method: 'POST', body: data, cache: 'no-store' });
+      return (16 / ((performance.now() - t0) / 1000)).toFixed(2);
+    } else {
+      return '—';
+    }
   }
 
   function getRating(dl) {
     const v = parseFloat(dl);
-    if (v >= 50) return { emoji: "🚀", title: "Excellent Connection!", desc: "Perfect for 4K streaming, online gaming, and HD video calls.", cls: "tag-good", label: "FAST" };
+    if (isNaN(v)) return { emoji: "📡", title: "Ping Only", desc: "Full speed test only available on My Server or Cloudflare.", cls: "tag-ok", label: "PING" };
+    if (v >= 50) return { emoji: "🚀", title: "Excellent!", desc: "Perfect for 4K streaming, gaming, and HD video calls.", cls: "tag-good", label: "FAST" };
     if (v >= 10) return { emoji: "✅", title: "Good Connection", desc: "Suitable for HD streaming and most online activities.", cls: "tag-ok", label: "OK" };
-    return { emoji: "🐢", title: "Slow Connection", desc: "You may experience buffering. A VPN can sometimes help with ISP throttling.", cls: "tag-bad", label: "SLOW" };
+    return { emoji: "🐢", title: "Slow Connection", desc: "You may experience buffering. A VPN can sometimes help.", cls: "tag-bad", label: "SLOW" };
   }
 
   function showNordCard(dl) {
     const v = parseFloat(dl);
-    const card = document.getElementById("nordCard");
     const badge = document.getElementById("nordBadge");
     const title = document.getElementById("nordCardTitle");
     const desc = document.getElementById("nordCardDesc");
-
-    if (v < 10) {
+    if (v < 10 || isNaN(v)) {
       badge.textContent = "⚡ FIX YOUR SPEED";
       title.textContent = "Your connection seems slow — NordVPN can help";
-      desc.textContent = "Your ISP may be throttling your speed. NordVPN encrypts your traffic and bypasses throttling, often improving speeds significantly.";
+      desc.textContent = "Your ISP may be throttling your speed. NordVPN encrypts your traffic and can improve speeds.";
     } else {
       badge.textContent = "🛡️ STAY PROTECTED";
       title.textContent = "Good speed — now protect your privacy";
-      desc.textContent = "Your speed is solid. Use NordVPN to keep your data private from your ISP and stay secure on any network.";
+      desc.textContent = "Your speed is solid. Use NordVPN to keep your data private on any network.";
     }
-    card.classList.add("show");
+    document.getElementById("nordCard").classList.add("show");
   }
 
   async function startTest() {
@@ -434,56 +560,49 @@
     document.getElementById("gaugeVal").textContent = "...";
 
     try {
-      // Ping
       setActive("box-ping");
-      setProgress(10, "Testing ping...");
+      setProgress(10, "Testing ping to " + currentServerName + "...");
       const ping = await pingTest();
       document.getElementById("ping").textContent = ping;
       setGauge(ping, 200);
       setDone("box-ping");
 
-      // Download
       setActive("box-dl");
-      setProgress(40, "Testing download speed...");
+      setProgress(40, "Testing download...");
       document.getElementById("gaugePhase").textContent = "DOWNLOAD TEST";
       document.getElementById("gaugeUnit").textContent = "Mbps";
       const dl = await downloadTest();
       document.getElementById("dl").textContent = dl;
-      setGauge(parseFloat(dl), 100);
+      if (!isNaN(parseFloat(dl))) setGauge(parseFloat(dl), 100);
       setDone("box-dl");
 
-      // Upload
       setActive("box-ul");
-      setProgress(75, "Testing upload speed...");
+      setProgress(75, "Testing upload...");
       document.getElementById("gaugePhase").textContent = "UPLOAD TEST";
       const ul = await uploadTest();
       document.getElementById("ul").textContent = ul;
-      setGauge(parseFloat(ul), 100);
+      if (!isNaN(parseFloat(ul))) setGauge(parseFloat(ul), 100);
       setDone("box-ul");
 
-      // Done
       setProgress(100, "Test complete!");
       document.getElementById("gaugePhase").textContent = "COMPLETE";
       setActive(null);
 
-      // Rating
       const rating = getRating(dl);
       document.getElementById("resultEmoji").textContent = rating.emoji;
       document.getElementById("resultTitle").textContent = rating.title;
       document.getElementById("resultDesc").textContent = rating.desc;
       document.getElementById("resultBox").classList.add("show");
 
-      // Nord card - always show after test
       showNordCard(dl);
 
-      // History
       const now = new Date().toLocaleTimeString();
-      testHistory.unshift({ time: now, ping, dl, ul, rating });
+      testHistory.unshift({ time: now, server: currentServerName, ping, dl, ul, rating });
       renderHistory();
 
     } catch(e) {
-      document.getElementById("gaugePhase").textContent = "ERROR — check connection";
-      setProgress(0, "Test failed. Try again.");
+      document.getElementById("gaugePhase").textContent = "ERROR — try another server";
+      setProgress(0, "Test failed.");
     }
 
     btn.disabled = false; btn.textContent = "▶ RUN AGAIN";
@@ -492,12 +611,13 @@
   function renderHistory() {
     const body = document.getElementById("historyBody");
     if (testHistory.length === 0) {
-      body.innerHTML = '<tr><td colspan="5" style="color:var(--muted);font-size:13px;padding:20px;">No tests yet.</td></tr>';
+      body.innerHTML = '<tr><td colspan="6" style="color:var(--muted);font-size:13px;padding:20px;">No tests yet.</td></tr>';
       return;
     }
     body.innerHTML = testHistory.slice(0, 10).map(r =>
       `<tr>
         <td>${r.time}</td>
+        <td>${r.server}</td>
         <td>${r.ping} ms</td>
         <td>${r.dl} Mbps</td>
         <td>${r.ul} Mbps</td>
