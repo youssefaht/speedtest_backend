@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="FastCheck – Free real internet speed test. Check your download, upload speed and ping instantly."/>
+  <meta name="keywords" content="internet speed test, ping test, wifi speed check, download speed, upload speed"/>
+  <title>FastCheck – Real Internet Speed Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #050810; --surface: #0c1220; --border: #1a2540;
+      --accent: #00e5ff; --accent2: #7c3aed; --text: #e8edf8;
+      --muted: #5a6a8a; --green: #00ff88; --orange: #ff7043; --red: #ff4444;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; overflow-x: hidden; }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px; pointer-events: none; z-index: 0;
+    }
+    .orb { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: 0; }
+    .orb-1 { width: 400px; height: 400px; background: rgba(0,229,255,0.06); top: -100px; left: -100px; }
+    .orb-2 { width: 300px; height: 300px; background: rgba(124,58,237,0.07); bottom: 0; right: 0; }
+
+    nav {
+      position: relative; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 24px 48px; border-bottom: 1px solid var(--border);
+    }
+    .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+    .logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* TOP NORD BANNER */
+    .nord-banner {
+      position: relative; z-index: 5;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      padding: 10px 20px;
+      background: linear-gradient(90deg, rgba(30,10,60,0.9), rgba(0,20,50,0.9));
+      border-bottom: 1px solid rgba(124,58,237,0.3);
+      font-size: 13px;
+    }
+    .nord-banner .nord-logo { font-weight: 800; color: #4FFFB0; font-size: 15px; }
+    .nord-banner .nord-text { color: var(--muted); }
+    .nord-banner .nord-cta {
+      background: #4FFFB0; color: #050810; font-weight: 800;
+      padding: 5px 14px; border-radius: 6px; text-decoration: none;
+      font-size: 12px; transition: opacity 0.2s; white-space: nowrap;
+    }
+    .nord-banner .nord-cta:hover { opacity: 0.85; }
+
+    .hero { position: relative; z-index: 5; text-align: center; padding: 60px 24px 30px; }
+    .hero-label {
+      display: inline-block; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.3);
+      color: var(--accent); padding: 4px 14px; border-radius: 100px;
+      font-size: 12px; font-weight: 600; letter-spacing: 2px; margin-bottom: 20px;
+    }
+    .hero h1 { font-size: clamp(32px, 5vw, 52px); font-weight: 800; line-height: 1.1; }
+    .hero h1 .highlight { color: var(--accent); }
+    .hero p { color: var(--muted); margin-top: 12px; font-size: 16px; }
+
+    .test-card {
+      position: relative; z-index: 5;
+      max-width: 620px; margin: 30px auto 20px;
+      background: var(--surface); padding: 36px;
+      border-radius: 24px; border: 1px solid var(--border);
+      box-shadow: 0 0 60px rgba(0,229,255,0.04);
+    }
+
+    .gauge-wrap { text-align: center; margin-bottom: 28px; }
+    .gauge-svg { width: 200px; height: 120px; }
+    .gauge-bg { fill: none; stroke: var(--border); stroke-width: 12; stroke-linecap: round; }
+    .gauge-fill {
+      fill: none; stroke: var(--accent); stroke-width: 12; stroke-linecap: round;
+      stroke-dasharray: 251; stroke-dashoffset: 251;
+      transition: stroke-dashoffset 0.4s ease, stroke 0.3s;
+    }
+    .gauge-val { font-family: 'DM Mono', monospace; font-size: 38px; font-weight: 500; fill: var(--text); }
+    .gauge-unit { font-family: 'Syne', sans-serif; font-size: 13px; fill: var(--muted); }
+    .gauge-phase { font-size: 12px; color: var(--muted); margin-top: 6px; letter-spacing: 1px; font-weight: 600; }
+
+    .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 20px 0; }
+    .stat-box {
+      background: var(--bg); padding: 14px 10px;
+      border-radius: 12px; border: 1px solid var(--border);
+      text-align: center; transition: border-color 0.3s;
+    }
+    .stat-box.active { border-color: var(--accent); }
+    .stat-box.done { border-color: var(--green); }
+    .stat-label { font-size: 11px; color: var(--muted); letter-spacing: 1px; margin-bottom: 6px; font-weight: 600; }
+    .stat-val { font-family: 'DM Mono', monospace; font-size: 22px; color: var(--text); }
+    .stat-unit { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+    .progress-wrap { margin: 16px 0; }
+    .progress-bar { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .progress-fill {
+      height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent));
+      border-radius: 4px; width: 0%; transition: width 0.3s;
+    }
+    .progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+    .btn-start {
+      width: 100%; padding: 16px; margin-top: 6px;
+      background: linear-gradient(135deg, var(--accent), #0099bb);
+      border: none; border-radius: 12px;
+      color: #050810; font-family: 'Syne', sans-serif;
+      font-size: 16px; font-weight: 800; cursor: pointer;
+      letter-spacing: 1px; transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn-start:hover { opacity: 0.9; }
+    .btn-start:active { transform: scale(0.99); }
+    .btn-start:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .ip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; justify-content: center; }
+    .ip-chip {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace;
+    }
+    .ip-chip span { color: var(--text); }
+
+    .result-box {
+      display: none; margin-top: 20px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 14px; padding: 20px; text-align: center;
+    }
+    .result-box.show { display: block; }
+    .result-emoji { font-size: 36px; }
+    .result-title { font-size: 18px; font-weight: 800; margin: 8px 0 4px; }
+    .result-desc { font-size: 13px; color: var(--muted); }
+
+    /* NORD AFFILIATE CARD - يظهر دائماً بعد الاختبار */
+    .nord-card {
+      display: none; margin-top: 16px;
+      background: linear-gradient(135deg, #0d0822, #0a1a2e);
+      border: 1px solid rgba(79,255,176,0.25);
+      border-radius: 16px; padding: 22px;
+      position: relative; overflow: hidden;
+    }
+    .nord-card::before {
+      content: ''; position: absolute; top: -40px; right: -40px;
+      width: 120px; height: 120px;
+      background: rgba(79,255,176,0.06); border-radius: 50%;
+    }
+    .nord-card.show { display: block; }
+    .nord-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .nord-card-logo { font-size: 20px; font-weight: 900; color: #4FFFB0; }
+    .nord-card-badge {
+      background: rgba(79,255,176,0.15); color: #4FFFB0;
+      font-size: 10px; font-weight: 700; padding: 3px 8px;
+      border-radius: 100px; letter-spacing: 1px;
+    }
+    .nord-card-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .nord-card-desc { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+    .nord-card-features { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .nord-feat {
+      background: rgba(255,255,255,0.05); border-radius: 6px;
+      padding: 4px 10px; font-size: 11px; color: var(--muted);
+    }
+    .nord-btn {
+      display: block; text-align: center;
+      background: linear-gradient(135deg, #4FFFB0, #00cc88);
+      color: #050810; font-weight: 800; font-size: 14px;
+      padding: 13px; border-radius: 10px;
+      text-decoration: none; transition: opacity 0.2s;
+    }
+    .nord-btn:hover { opacity: 0.88; }
+    .nord-disclaimer { font-size: 10px; color: var(--muted); margin-top: 8px; text-align: center; }
+
+    /* HISTORY */
+    .history-section { position: relative; z-index: 5; max-width: 620px; margin: 0 auto 40px; }
+    .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; padding: 0 4px; }
+    .history-table { width: 100%; border-collapse: collapse; }
+    .history-table th {
+      text-align: left; font-size: 11px; color: var(--muted);
+      letter-spacing: 1px; padding: 8px 12px; border-bottom: 1px solid var(--border);
+    }
+    .history-table td {
+      font-family: 'DM Mono', monospace; font-size: 13px;
+      padding: 10px 12px; border-bottom: 1px solid rgba(26,37,64,0.5);
+    }
+    .history-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .tag-good { color: var(--green); }
+    .tag-ok { color: var(--orange); }
+    .tag-bad { color: var(--red); }
+
+    .main-layout { max-width: 660px; margin: 0 auto; padding: 0 16px; }
+
+    footer {
+      position: relative; z-index: 5;
+      text-align: center; padding: 30px 24px;
+      border-top: 1px solid var(--border); color: var(--muted); font-size: 13px;
+    }
+    footer a { color: var(--muted); text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      .test-card { margin: 20px 0; padding: 24px 16px; }
+      .nord-banner { flex-wrap: wrap; gap: 6px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- TOP NORDVPN BANNER -->
+<div class="nord-banner">
+  <span class="nord-logo">NordVPN</span>
+  <span class="nord-text">🛡️ Protect your connection & boost privacy</span>
+  <a class="nord-cta" href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=YOUR_AFFILIATE_ID" target="_blank" rel="noopener">
+    Try Free 30 Days →
+  </a>
+</div>
+
+<nav>
+  <div class="logo">Fast<span>Check</span></div>
+  <div class="nav-links">
+    <a href="#">Speed Test</a>
+    <a href="#">Ping Test</a>
+    <a href="#">About</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-label">FREE & ACCURATE</div>
+  <h1>Test Your <span class="highlight">Real Internet Speed</span></h1>
+  <p>Download · Upload · Ping — no plugins, no tricks</p>
+</div>
+
+<div class="main-layout">
+
+  <div class="test-card">
+
+    <div class="gauge-wrap">
+      <svg class="gauge-svg" viewBox="0 0 200 120">
+        <path class="gauge-bg" d="M 20 110 A 80 80 0 0 1 180 110" />
+        <path class="gauge-fill" id="gaugeFill" d="M 20 110 A 80 80 0 0 1 180 110" />
+        <text class="gauge-val" id="gaugeVal" x="100" y="90" text-anchor="middle">—</text>
+        <text class="gauge-unit" id="gaugeUnit" x="100" y="108" text-anchor="middle">Mbps</text>
+      </svg>
+      <div class="gauge-phase" id="gaugePhase">READY TO TEST</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box" id="box-ping">
+        <div class="stat-label">PING</div>
+        <div class="stat-val" id="ping">—</div>
+        <div class="stat-unit">ms</div>
+      </div>
+      <div class="stat-box" id="box-dl">
+        <div class="stat-label">DOWNLOAD</div>
+        <div class="stat-val" id="dl">—</div>
+        <div class="stat-unit">Mbps</div>
+      </div>
+      <div class="stat-box" id="box-ul">
+        <div class="stat-label">UPLOAD</div>
+        <div class="stat-val" id="ul">—</div>
+        <div class="stat-unit">Mbps</div>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label">
+        <span id="progressLabel">Press START to begin</span>
+        <span id="progressPct"></span>
+      </div>
+    </div>
+
+    <div class="ip-row">
+      <div class="ip-chip">IP: <span id="ipAddr">loading...</span></div>
+      <div class="ip-chip">ISP: <span id="ispName">loading...</span></div>
+      <div class="ip-chip">📍 <span id="locName">loading...</span></div>
+    </div>
+
+    <button class="btn-start" id="btnStart" onclick="startTest()">▶ START TEST</button>
+
+    <!-- RESULT -->
+    <div class="result-box" id="resultBox">
+      <div class="result-emoji" id="resultEmoji">🚀</div>
+      <div class="result-title" id="resultTitle">—</div>
+      <div class="result-desc" id="resultDesc">—</div>
+    </div>
+
+    <!-- NORDVPN AFFILIATE CARD (يظهر بعد كل اختبار) -->
+    <div class="nord-card" id="nordCard">
+      <div class="nord-card-head">
+        <div class="nord-card-logo">NordVPN</div>
+        <div class="nord-card-badge" id="nordBadge">RECOMMENDED</div>
+      </div>
+      <div class="nord-card-title" id="nordCardTitle">Secure & speed up your connection</div>
+      <div class="nord-card-desc" id="nordCardDesc">
+        NordVPN can optimize your routing and protect your data from your ISP throttling.
+      </div>
+      <div class="nord-card-features">
+        <div class="nord-feat">✓ 30-day free trial</div>
+        <div class="nord-feat">✓ No logs</div>
+        <div class="nord-feat">✓ 6 devices</div>
+        <div class="nord-feat">✓ 6000+ servers</div>
+      </div>
+      <a class="nord-btn" href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=YOUR_AFFILIATE_ID" target="_blank" rel="noopener">
+        Get NordVPN – 30 Days Free →
+      </a>
+      <div class="nord-disclaimer">Affiliate link · We earn a commission at no cost to you</div>
+    </div>
+
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history-section">
+    <div class="section-title">📊 Test History</div>
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>TIME</th><th>PING</th><th>DOWNLOAD</th><th>UPLOAD</th><th>RATING</th>
+        </tr>
+      </thead>
+      <tbody id="historyBody">
+        <tr><td colspan="5" style="color:var(--muted);font-size:13px;padding:20px;">No tests yet.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<footer>
+  <p>FastCheck Speed Test · Free & Private · <a href="#">Privacy Policy</a></p>
+  <p style="margin-top:6px;font-size:11px;">This site contains affiliate links. We may earn a commission at no cost to you.</p>
+</footer>
+
+<script>
+  // ✅ Backend الخاص بك على Vercel
+  const SERVER = "https://speedtest-backend-dtuq.vercel.app";
+
+  let testHistory = [];
+
+  async function loadIP() {
+    try {
+      const r = await fetch("https://ipapi.co/json/");
+      const d = await r.json();
+      document.getElementById("ipAddr").textContent = d.ip || "N/A";
+      document.getElementById("ispName").textContent = d.org ? d.org.substring(0, 18) : "N/A";
+      document.getElementById("locName").textContent = (d.city || "") + ", " + (d.country_code || "");
+    } catch {}
+  }
+  loadIP();
+
+  function setGauge(val, max) {
+    const pct = Math.min(val / max, 1);
+    document.getElementById("gaugeFill").style.strokeDashoffset = 251 - (251 * pct);
+    document.getElementById("gaugeVal").textContent = val;
+    const fill = document.getElementById("gaugeFill");
+    if (pct < 0.3) fill.style.stroke = "#ff4444";
+    else if (pct < 0.6) fill.style.stroke = "#ff7043";
+    else fill.style.stroke = "#00e5ff";
+  }
+
+  function setProgress(pct, label) {
+    document.getElementById("progressFill").style.width = pct + "%";
+    document.getElementById("progressLabel").textContent = label;
+    document.getElementById("progressPct").textContent = pct > 0 ? pct + "%" : "";
+  }
+
+  function setActive(id) {
+    ["box-ping","box-dl","box-ul"].forEach(b => document.getElementById(b).classList.remove("active","done"));
+    if (id) document.getElementById(id).classList.add("active");
+  }
+  function setDone(id) {
+    document.getElementById(id).classList.remove("active");
+    document.getElementById(id).classList.add("done");
+  }
+
+  async function pingTest() {
+    const t0 = performance.now();
+    await fetch(SERVER + "/api/ping", { cache: "no-store" });
+    return Math.round(performance.now() - t0);
+  }
+
+  async function downloadTest() {
+    const t0 = performance.now();
+    await fetch(SERVER + "/api/download", { cache: "no-store" });
+    const t1 = performance.now();
+    return (16 / ((t1 - t0) / 1000)).toFixed(2);
+  }
+
+  async function uploadTest() {
+    const data = new Uint8Array(2 * 1024 * 1024);
+    const t0 = performance.now();
+    await fetch(SERVER + "/api/upload", { method: "POST", body: data, cache: "no-store" });
+    const t1 = performance.now();
+    return (16 / ((t1 - t0) / 1000)).toFixed(2);
+  }
+
+  function getRating(dl) {
+    const v = parseFloat(dl);
+    if (v >= 50) return { emoji: "🚀", title: "Excellent Connection!", desc: "Perfect for 4K streaming, online gaming, and HD video calls.", cls: "tag-good", label: "FAST" };
+    if (v >= 10) return { emoji: "✅", title: "Good Connection", desc: "Suitable for HD streaming and most online activities.", cls: "tag-ok", label: "OK" };
+    return { emoji: "🐢", title: "Slow Connection", desc: "You may experience buffering. A VPN can sometimes help with ISP throttling.", cls: "tag-bad", label: "SLOW" };
+  }
+
+  function showNordCard(dl) {
+    const v = parseFloat(dl);
+    const card = document.getElementById("nordCard");
+    const badge = document.getElementById("nordBadge");
+    const title = document.getElementById("nordCardTitle");
+    const desc = document.getElementById("nordCardDesc");
+
+    if (v < 10) {
+      badge.textContent = "⚡ FIX YOUR SPEED";
+      title.textContent = "Your connection seems slow — NordVPN can help";
+      desc.textContent = "Your ISP may be throttling your speed. NordVPN encrypts your traffic and bypasses throttling, often improving speeds significantly.";
+    } else {
+      badge.textContent = "🛡️ STAY PROTECTED";
+      title.textContent = "Good speed — now protect your privacy";
+      desc.textContent = "Your speed is solid. Use NordVPN to keep your data private from your ISP and stay secure on any network.";
+    }
+    card.classList.add("show");
+  }
+
+  async function startTest() {
+    const btn = document.getElementById("btnStart");
+    btn.disabled = true; btn.textContent = "Testing...";
+    document.getElementById("resultBox").classList.remove("show");
+    document.getElementById("nordCard").classList.remove("show");
+    document.getElementById("gaugeUnit").textContent = "ms";
+    document.getElementById("gaugePhase").textContent = "TESTING PING...";
+    document.getElementById("gaugeVal").textContent = "...";
+
+    try {
+      // Ping
+      setActive("box-ping");
+      setProgress(10, "Testing ping...");
+      const ping = await pingTest();
+      document.getElementById("ping").textContent = ping;
+      setGauge(ping, 200);
+      setDone("box-ping");
+
+      // Download
+      setActive("box-dl");
+      setProgress(40, "Testing download speed...");
+      document.getElementById("gaugePhase").textContent = "DOWNLOAD TEST";
+      document.getElementById("gaugeUnit").textContent = "Mbps";
+      const dl = await downloadTest();
+      document.getElementById("dl").textContent = dl;
+      setGauge(parseFloat(dl), 100);
+      setDone("box-dl");
+
+      // Upload
+      setActive("box-ul");
+      setProgress(75, "Testing upload speed...");
+      document.getElementById("gaugePhase").textContent = "UPLOAD TEST";
+      const ul = await uploadTest();
+      document.getElementById("ul").textContent = ul;
+      setGauge(parseFloat(ul), 100);
+      setDone("box-ul");
+
+      // Done
+      setProgress(100, "Test complete!");
+      document.getElementById("gaugePhase").textContent = "COMPLETE";
+      setActive(null);
+
+      // Rating
+      const rating = getRating(dl);
+      document.getElementById("resultEmoji").textContent = rating.emoji;
+      document.getElementById("resultTitle").textContent = rating.title;
+      document.getElementById("resultDesc").textContent = rating.desc;
+      document.getElementById("resultBox").classList.add("show");
+
+      // Nord card - always show after test
+      showNordCard(dl);
+
+      // History
+      const now = new Date().toLocaleTimeString();
+      testHistory.unshift({ time: now, ping, dl, ul, rating });
+      renderHistory();
+
+    } catch(e) {
+      document.getElementById("gaugePhase").textContent = "ERROR — check connection";
+      setProgress(0, "Test failed. Try again.");
+    }
+
+    btn.disabled = false; btn.textContent = "▶ RUN AGAIN";
+  }
+
+  function renderHistory() {
+    const body = document.getElementById("historyBody");
+    if (testHistory.length === 0) {
+      body.innerHTML = '<tr><td colspan="5" style="color:var(--muted);font-size:13px;padding:20px;">No tests yet.</td></tr>';
+      return;
+    }
+    body.innerHTML = testHistory.slice(0, 10).map(r =>
+      `<tr>
+        <td>${r.time}</td>
+        <td>${r.ping} ms</td>
+        <td>${r.dl} Mbps</td>
+        <td>${r.ul} Mbps</td>
+        <td class="${r.rating.cls}">${r.rating.label}</td>
+      </tr>`
+    ).join("");
+  }
+</script>
+
+</body>
+</html>
