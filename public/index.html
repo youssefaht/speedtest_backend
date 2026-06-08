@@ -143,12 +143,12 @@
 <div class="hero">
   <div class="hero-label">FREE &amp; ACCURATE</div>
   <h1>Test Your <span class="highlight">Real Internet Speed</span></h1>
-  <p>Download · Upload · Ping — Auto-detects your closest server from 30+ countries</p>
+  <p>Download · Upload · Ping — No setup needed · Works instantly for any visitor</p>
 </div>
 
 <div class="worker-notice">
   <div class="wn-box">
-    🌍 <span>Ping uses <strong>real servers</strong> per country · Download/Upload via <strong>Cloudflare CDN</strong> · Server auto-selected based on your location</span>
+    🌍 <span>Ping uses <strong>real servers</strong> per country · Download via <strong>public CDN</strong> · Upload via <strong>httpbin</strong> · Server auto-selected</span>
   </div>
 </div>
 
@@ -248,7 +248,6 @@
 // ⚙️  Worker URL للـ Speed Test (Download / Upload)
 // استبدل بـ worker URL بعد Deploy على Cloudflare
 // ============================================================
-// speed.cloudflare.com is used directly — no Worker needed
 
 // ============================================================
 // 🌍 REAL PING ENDPOINTS — خوادم حقيقية في كل دولة
@@ -643,26 +642,68 @@ function setDone(id) {
 }
 
 // ============================================================
-// SPEED TESTS — speed.cloudflare.com (يعمل فوراً بدون Worker)
+// SPEED TESTS — Multi-source download (no Worker needed)
+// يستخدم ملفات عامة من CDNs مختلفة لقياس السرعة الحقيقية
 // ============================================================
+
+// مصادر Download عامة بدون CORS block
+const DL_SOURCES = [
+  // Cloudflare CDN — ملف 10MB عام
+  'https://cachefly.cachefly.net/10mb.test',
+  // thinkbroadband — مواقع اختبار سرعة معروفة
+  'https://speed.hetzner.de/10MB.bin',
+  // fallback
+  'https://ash-speed.hetzner.com/10MB.bin',
+];
+
 async function runDownload() {
-  // warm-up
-  try { await fetch('https://speed.cloudflare.com/__down?bytes=102400',{cache:'no-store'}); } catch{}
-  const BYTES = 5_000_000;
-  const t0 = performance.now();
-  const resp = await fetch('https://speed.cloudflare.com/__down?bytes='+BYTES,{cache:'no-store'});
-  await resp.arrayBuffer();
-  const secs = (performance.now()-t0)/1000;
-  return ((BYTES/1024/1024*8)/secs).toFixed(2);
+  // جرب كل مصدر حتى ينجح واحد
+  for (const url of DL_SOURCES) {
+    try {
+      // warm-up بـ 100KB
+      try { await fetch(url, { cache:'no-store', signal: AbortSignal.timeout(3000) }); } catch{}
+
+      const t0 = performance.now();
+      const resp = await fetch(url, { cache:'no-store', signal: AbortSignal.timeout(15000) });
+      const buffer = await resp.arrayBuffer();
+      const secs = (performance.now() - t0) / 1000;
+      const bytes = buffer.byteLength;
+      if (bytes < 100000) continue; // ملف صغير جداً، جرب التالي
+      return ((bytes / 1024 / 1024 * 8) / secs).toFixed(2);
+    } catch(e) {
+      continue; // جرب المصدر التالي
+    }
+  }
+  throw new Error('All download sources failed');
 }
 
 async function runUpload() {
-  const SIZE_MB = 2;
-  const data = new Uint8Array(SIZE_MB*1024*1024);
-  const t0 = performance.now();
-  await fetch('https://speed.cloudflare.com/__up',{method:'POST',body:data,cache:'no-store'});
-  const secs = (performance.now()-t0)/1000;
-  return ((SIZE_MB*8)/secs).toFixed(2);
+  // قياس Upload عبر إرسال بيانات لـ httpbin (يقبل POST بدون CORS)
+  const UPLOAD_SOURCES = [
+    'https://httpbin.org/post',
+    'https://postman-echo.com/post',
+  ];
+
+  const SIZE_KB = 512; // 512KB — كافي لقياس دقيق وسريع
+  const data = new Uint8Array(SIZE_KB * 1024);
+
+  for (const url of UPLOAD_SOURCES) {
+    try {
+      const t0 = performance.now();
+      const resp = await fetch(url, {
+        method: 'POST',
+        body: data,
+        cache: 'no-store',
+        signal: AbortSignal.timeout(15000)
+      });
+      if (!resp.ok && resp.status !== 200) continue;
+      const secs = (performance.now() - t0) / 1000;
+      return ((SIZE_KB / 1024 * 8) / secs).toFixed(2);
+    } catch(e) {
+      continue;
+    }
+  }
+  throw new Error('All upload sources failed');
 }
 
 // ============================================================
