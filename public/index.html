@@ -148,7 +148,7 @@
 
 <div class="worker-notice">
   <div class="wn-box">
-    🌍 <span>Ping uses <strong>real servers</strong> per country · Download via <strong>public CDN</strong> · Upload via <strong>httpbin</strong> · Server auto-selected</span>
+    🌍 <span>Ping uses <strong>real servers</strong> per country · Download &amp; Upload via <strong>LibreSpeed</strong> public servers · No setup needed</span>
   </div>
 </div>
 
@@ -642,68 +642,95 @@ function setDone(id) {
 }
 
 // ============================================================
-// SPEED TESTS — Multi-source download (no Worker needed)
-// يستخدم ملفات عامة من CDNs مختلفة لقياس السرعة الحقيقية
+// SPEED TESTS — LibreSpeed public servers (CORS enabled)
+// سيرفرات LibreSpeed العامة تدعم CORS بإضافة ?cors=true
+// Download: garbage.php  |  Upload: empty.php
 // ============================================================
 
-// مصادر Download عامة بدون CORS block
-const DL_SOURCES = [
-  // Cloudflare CDN — ملف 10MB عام
-  'https://cachefly.cachefly.net/10mb.test',
-  // thinkbroadband — مواقع اختبار سرعة معروفة
-  'https://speed.hetzner.de/10MB.bin',
-  // fallback
-  'https://ash-speed.hetzner.com/10MB.bin',
+// سيرفرات LibreSpeed عامة مع CORS مفعّل
+// المصدر: https://librespeed.org  (سيرفرات مجتمعية رسمية)
+const LIBRE_SERVERS = [
+  {
+    name: 'Frankfurt, DE',
+    dl: 'https://de.librespeed.org/backend/garbage.php?ckSize=10&cors=true',
+    ul: 'https://de.librespeed.org/backend/empty.php?cors=true',
+  },
+  {
+    name: 'New York, US',
+    dl: 'https://us.librespeed.org/backend/garbage.php?ckSize=10&cors=true',
+    ul: 'https://us.librespeed.org/backend/empty.php?cors=true',
+  },
+  {
+    name: 'Paris, FR',
+    dl: 'https://fr.librespeed.org/backend/garbage.php?ckSize=10&cors=true',
+    ul: 'https://fr.librespeed.org/backend/empty.php?cors=true',
+  },
+  {
+    name: 'Singapore',
+    dl: 'https://sg.librespeed.org/backend/garbage.php?ckSize=10&cors=true',
+    ul: 'https://sg.librespeed.org/backend/empty.php?cors=true',
+  },
 ];
 
-async function runDownload() {
-  // جرب كل مصدر حتى ينجح واحد
-  for (const url of DL_SOURCES) {
+// اختر أقرب سيرفر LibreSpeed بناءً على أقل ping
+async function getBestLibreServer() {
+  let best = null, bestMs = Infinity;
+  for (const srv of LIBRE_SERVERS) {
     try {
-      // warm-up بـ 100KB
-      try { await fetch(url, { cache:'no-store', signal: AbortSignal.timeout(3000) }); } catch{}
-
       const t0 = performance.now();
-      const resp = await fetch(url, { cache:'no-store', signal: AbortSignal.timeout(15000) });
-      const buffer = await resp.arrayBuffer();
-      const secs = (performance.now() - t0) / 1000;
-      const bytes = buffer.byteLength;
-      if (bytes < 100000) continue; // ملف صغير جداً، جرب التالي
-      return ((bytes / 1024 / 1024 * 8) / secs).toFixed(2);
-    } catch(e) {
-      continue; // جرب المصدر التالي
-    }
+      await fetch(srv.ul + '&r=' + Math.random(), {
+        cache: 'no-store',
+        signal: AbortSignal.timeout(3000)
+      });
+      const ms = performance.now() - t0;
+      if (ms < bestMs) { bestMs = ms; best = srv; }
+    } catch {}
   }
-  throw new Error('All download sources failed');
+  return best || LIBRE_SERVERS[0];
+}
+
+async function runDownload() {
+  const srv = await getBestLibreServer();
+
+  // warm-up
+  try {
+    await fetch(srv.dl + '&r=' + Math.random(), {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(4000)
+    });
+  } catch {}
+
+  // قياس حقيقي
+  const t0 = performance.now();
+  const resp = await fetch(srv.dl + '&r=' + Math.random(), {
+    cache: 'no-store',
+    signal: AbortSignal.timeout(20000)
+  });
+  const buffer = await resp.arrayBuffer();
+  const secs = (performance.now() - t0) / 1000;
+  const bytes = buffer.byteLength;
+  if (bytes < 10000) throw new Error('Download too small');
+  return ((bytes / 1024 / 1024 * 8) / secs).toFixed(2);
 }
 
 async function runUpload() {
-  // قياس Upload عبر إرسال بيانات لـ httpbin (يقبل POST بدون CORS)
-  const UPLOAD_SOURCES = [
-    'https://httpbin.org/post',
-    'https://postman-echo.com/post',
-  ];
+  const srv = await getBestLibreServer();
 
-  const SIZE_KB = 512; // 512KB — كافي لقياس دقيق وسريع
-  const data = new Uint8Array(SIZE_KB * 1024);
+  // بيانات عشوائية 2MB
+  const SIZE_MB = 2;
+  const data = new Uint8Array(SIZE_MB * 1024 * 1024);
+  crypto.getRandomValues(data.subarray(0, 1024)); // رأس عشوائي لمنع الضغط
 
-  for (const url of UPLOAD_SOURCES) {
-    try {
-      const t0 = performance.now();
-      const resp = await fetch(url, {
-        method: 'POST',
-        body: data,
-        cache: 'no-store',
-        signal: AbortSignal.timeout(15000)
-      });
-      if (!resp.ok && resp.status !== 200) continue;
-      const secs = (performance.now() - t0) / 1000;
-      return ((SIZE_KB / 1024 * 8) / secs).toFixed(2);
-    } catch(e) {
-      continue;
-    }
-  }
-  throw new Error('All upload sources failed');
+  const t0 = performance.now();
+  const resp = await fetch(srv.ul + '&r=' + Math.random(), {
+    method: 'POST',
+    body: data,
+    cache: 'no-store',
+    signal: AbortSignal.timeout(20000)
+  });
+  if (!resp.ok) throw new Error('Upload failed: ' + resp.status);
+  const secs = (performance.now() - t0) / 1000;
+  return ((SIZE_MB * 8) / secs).toFixed(2);
 }
 
 // ============================================================
@@ -845,7 +872,7 @@ function renderHistory() {
   ).join('');
 }
 
-// ── INIT ────────────────────────────────────────────────
+// ── INIT ──────────────────────────────────────────────────
 buildServerGrid();
 buildWorldGrid();
 loadIP();
