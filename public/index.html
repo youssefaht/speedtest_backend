@@ -533,20 +533,34 @@
     return { emoji: "🐢", title: "Slow Connection", desc: "You may experience buffering. A VPN can sometimes help.", cls: "tag-bad", label: "SLOW" };
   }
 
-  function showNordCard(dl) {
+  function showNordCard(dl, ping) {
     const v = parseFloat(dl);
+    const p = parseInt(ping);
     const badge = document.getElementById("nordBadge");
     const title = document.getElementById("nordCardTitle");
     const desc = document.getElementById("nordCardDesc");
-    if (v < 10 || isNaN(v)) {
-      badge.textContent = "⚡ FIX YOUR SPEED";
-      title.textContent = "Your connection seems slow — NordVPN can help";
-      desc.textContent = "Your ISP may be throttling your speed. NordVPN encrypts your traffic and can improve speeds.";
+
+    const slowPing = p > 70;
+    const slowDownload = v < 25 || isNaN(v);
+
+    if (slowPing && slowDownload) {
+      badge.textContent = "⚠️ POOR CONNECTION";
+      title.textContent = "Your ping is high & your speed is low";
+      desc.textContent = "High latency (" + p + " ms) and slow download (" + (isNaN(v) ? "—" : v + " Mbps") + ") detected. Your ISP may be throttling or routing your traffic poorly. NordVPN can reroute your connection through faster servers and bypass ISP throttling — try it free for 30 days.";
+    } else if (slowPing) {
+      badge.textContent = "📡 HIGH LATENCY";
+      title.textContent = "Your ping is high (" + p + " ms)";
+      desc.textContent = "High ping causes lag in gaming and video calls. NordVPN can route your traffic through closer, optimized servers to reduce latency significantly.";
+    } else if (slowDownload) {
+      badge.textContent = "🐢 SLOW DOWNLOAD";
+      title.textContent = "Your download speed is low (" + (isNaN(v) ? "—" : v + " Mbps") + ")";
+      desc.textContent = "Slow download speeds may be caused by ISP throttling. NordVPN encrypts your traffic so your ISP cannot throttle specific services like streaming or gaming.";
     } else {
       badge.textContent = "🛡️ STAY PROTECTED";
-      title.textContent = "Good speed — now protect your privacy";
-      desc.textContent = "Your speed is solid. Use NordVPN to keep your data private on any network.";
+      title.textContent = "Great connection — now protect your privacy";
+      desc.textContent = "Your speed and ping look solid! Use NordVPN to keep your data private from your ISP and stay secure on any network.";
     }
+
     document.getElementById("nordCard").classList.add("show");
   }
 
@@ -594,7 +608,7 @@
       document.getElementById("resultDesc").textContent = rating.desc;
       document.getElementById("resultBox").classList.add("show");
 
-      showNordCard(dl);
+      showNordCard(dl, ping);
 
       const now = new Date().toLocaleTimeString();
       testHistory.unshift({ time: now, server: currentServerName, ping, dl, ul, rating });
