@@ -901,49 +901,67 @@ function setDone(id) {
 }
 
 // ============================================================
-// LIBRESPEED
+// CLOUDFLARE SPEED TEST — موثوق وCORS مدعوم دائماً
 // ============================================================
-const LIBRE_SERVERS = [
-  { name:'Frankfurt', dl:'https://de.librespeed.org/backend/garbage.php?ckSize=10&cors=true', ul:'https://de.librespeed.org/backend/empty.php?cors=true' },
-  { name:'New York',  dl:'https://us.librespeed.org/backend/garbage.php?ckSize=10&cors=true', ul:'https://us.librespeed.org/backend/empty.php?cors=true' },
-  { name:'Paris',     dl:'https://fr.librespeed.org/backend/garbage.php?ckSize=10&cors=true', ul:'https://fr.librespeed.org/backend/empty.php?cors=true' },
-  { name:'Singapore', dl:'https://sg.librespeed.org/backend/garbage.php?ckSize=10&cors=true', ul:'https://sg.librespeed.org/backend/empty.php?cors=true' },
-];
 
-async function getBestLibreServer() {
-  let best=null, bestMs=Infinity;
-  for (const srv of LIBRE_SERVERS) {
-    try {
-      const t0 = performance.now();
-      await fetch(srv.ul+'&r='+Math.random(), {cache:'no-store', signal:AbortSignal.timeout(3000)});
-      const ms = performance.now()-t0;
-      if (ms<bestMs) { bestMs=ms; best=srv; }
-    } catch {}
-  }
-  return best || LIBRE_SERVERS[0];
-}
+const CF_DOWNLOAD_URL = 'https://speed.cloudflare.com/__down?bytes=';
+const CF_UPLOAD_URL   = 'https://speed.cloudflare.com/__up';
 
 async function runDownload() {
-  const srv = await getBestLibreServer();
-  try { await fetch(srv.dl+'&r='+Math.random(), {cache:'no-store', signal:AbortSignal.timeout(4000)}); } catch {}
+  const SIZE = 10 * 1024 * 1024; // 10 MB
+
+  // warm-up صغير أولاً
+  try {
+    await fetch(CF_DOWNLOAD_URL + '1000000', {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(5000)
+    });
+  } catch {}
+
+  // القياس الحقيقي
   const t0 = performance.now();
-  const resp = await fetch(srv.dl+'&r='+Math.random(), {cache:'no-store', signal:AbortSignal.timeout(20000)});
+  const resp = await fetch(CF_DOWNLOAD_URL + SIZE + '&r=' + Math.random(), {
+    cache: 'no-store',
+    signal: AbortSignal.timeout(30000)
+  });
+
+  if (!resp.ok) throw new Error('Download failed: ' + resp.status);
   const buffer = await resp.arrayBuffer();
-  const secs = (performance.now()-t0)/1000;
+  const secs = (performance.now() - t0) / 1000;
   const bytes = buffer.byteLength;
-  if (bytes<10000) throw new Error('Download too small');
-  return ((bytes/1024/1024*8)/secs).toFixed(2);
+
+  if (bytes < 100000) throw new Error('Download too small');
+  return ((bytes / 1024 / 1024 * 8) / secs).toFixed(2);
 }
 
 async function runUpload() {
-  const srv = await getBestLibreServer();
-  const SIZE_MB = 2;
-  const data = new Uint8Array(SIZE_MB*1024*1024);
-  crypto.getRandomValues(data.subarray(0,1024));
+  const SIZE_MB = 4; // 4 MB upload
+  const data = new Uint8Array(SIZE_MB * 1024 * 1024);
+  crypto.getRandomValues(data.subarray(0, 4096));
+
+  // warm-up
+  try {
+    const warmData = new Uint8Array(100000);
+    await fetch(CF_UPLOAD_URL, {
+      method: 'POST',
+      body: warmData,
+      cache: 'no-store',
+      signal: AbortSignal.timeout(5000)
+    });
+  } catch {}
+
+  // القياس الحقيقي
   const t0 = performance.now();
-  const resp = await fetch(srv.ul+'&r='+Math.random(), {method:'POST', body:data, cache:'no-store', signal:AbortSignal.timeout(20000)});
-  if (!resp.ok) throw new Error('Upload failed: '+resp.status);
-  return ((SIZE_MB*8)/(( performance.now()-t0)/1000)).toFixed(2);
+  const resp = await fetch(CF_UPLOAD_URL, {
+    method: 'POST',
+    body: data,
+    cache: 'no-store',
+    signal: AbortSignal.timeout(30000)
+  });
+
+  if (!resp.ok) throw new Error('Upload failed: ' + resp.status);
+  const secs = (performance.now() - t0) / 1000;
+  return ((SIZE_MB * 8) / secs).toFixed(2);
 }
 
 // ============================================================
