@@ -23,11 +23,11 @@
     nav{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:24px 48px;border-bottom:1px solid var(--border)}
     .logo{font-size:22px;font-weight:800;letter-spacing:-0.5px}.logo span{color:var(--accent)}
     .nav-links{display:flex;gap:24px}.nav-links a{color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s}.nav-links a:hover{color:var(--accent)}
-    .nord-banner{position:relative;z-index:5;display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 20px;background:linear-gradient(90deg,rgba(30,10,60,.9),rgba(0,20,50,.9));border-bottom:1px solid rgba(124,58,237,.3);font-size:13px}
-    .nord-banner .nord-logo{font-weight:800;color:#4FFFB0;font-size:15px}
-    .nord-banner .nord-text{color:var(--muted)}
-    .nord-banner .nord-cta{background:#4FFFB0;color:#050810;font-weight:800;padding:5px 14px;border-radius:6px;text-decoration:none;font-size:12px;transition:opacity .2s;white-space:nowrap}
-    .nord-banner .nord-cta:hover{opacity:.85}
+    .surf-banner{position:relative;z-index:5;display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 20px;background:linear-gradient(90deg,rgba(0,10,40,.9),rgba(0,25,60,.9));border-bottom:1px solid rgba(0,120,255,.3);font-size:13px}
+    .surf-banner .surf-logo{font-weight:800;color:#00D4FF;font-size:15px}
+    .surf-banner .surf-text{color:var(--muted)}
+    .surf-banner .surf-cta{background:#00D4FF;color:#050810;font-weight:800;padding:5px 14px;border-radius:6px;text-decoration:none;font-size:12px;transition:opacity .2s;white-space:nowrap}
+    .surf-banner .surf-cta:hover{opacity:.85}
     .hero{position:relative;z-index:5;text-align:center;padding:50px 24px 20px}
     .hero-label{display:inline-block;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.3);color:var(--accent);padding:4px 14px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:2px;margin-bottom:20px}
     .hero h1{font-size:clamp(28px,5vw,48px);font-weight:800;line-height:1.1}.hero h1 .highlight{color:var(--accent)}
@@ -82,18 +82,18 @@
     .result-box{display:none;margin-top:20px;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center}
     .result-box.show{display:block}
     .result-emoji{font-size:36px}.result-title{font-size:18px;font-weight:800;margin:8px 0 4px}.result-desc{font-size:13px;color:var(--muted)}
-    .nord-card{display:none;margin-top:16px;background:linear-gradient(135deg,#0d0822,#0a1a2e);border:1px solid rgba(79,255,176,.25);border-radius:16px;padding:22px}
-    .nord-card.show{display:block}
-    .nord-card-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-    .nord-card-logo{font-size:20px;font-weight:900;color:#4FFFB0}
-    .nord-card-badge{background:rgba(79,255,176,.15);color:#4FFFB0;font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;letter-spacing:1px}
-    .nord-card-title{font-size:15px;font-weight:700;margin-bottom:6px}
-    .nord-card-desc{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5}
-    .nord-card-features{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-    .nord-feat{background:rgba(255,255,255,.05);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--muted)}
-    .nord-btn{display:block;text-align:center;background:linear-gradient(135deg,#4FFFB0,#00cc88);color:#050810;font-weight:800;font-size:14px;padding:13px;border-radius:10px;text-decoration:none;transition:opacity .2s}
-    .nord-btn:hover{opacity:.88}
-    .nord-disclaimer{font-size:10px;color:var(--muted);margin-top:8px;text-align:center}
+    .surf-card{display:none;margin-top:16px;background:linear-gradient(135deg,#00061a,#001a35);border:1px solid rgba(0,212,255,.25);border-radius:16px;padding:22px}
+    .surf-card.show{display:block}
+    .surf-card-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .surf-card-logo{font-size:20px;font-weight:900;color:#00D4FF}
+    .surf-card-badge{background:rgba(0,212,255,.15);color:#00D4FF;font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;letter-spacing:1px}
+    .surf-card-title{font-size:15px;font-weight:700;margin-bottom:6px}
+    .surf-card-desc{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5}
+    .surf-card-features{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+    .surf-feat{background:rgba(255,255,255,.05);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--muted)}
+    .surf-btn{display:block;text-align:center;background:linear-gradient(135deg,#00D4FF,#0099cc);color:#050810;font-weight:800;font-size:14px;padding:13px;border-radius:10px;text-decoration:none;transition:opacity .2s}
+    .surf-btn:hover{opacity:.88}
+    .surf-disclaimer{font-size:10px;color:var(--muted);margin-top:8px;text-align:center}
 
     /* global ping grid */
     .global-ping-section{position:relative;z-index:5;max-width:720px;margin:0 auto 40px;padding:0 16px}
@@ -123,16 +123,16 @@
 
     footer{position:relative;z-index:5;text-align:center;padding:30px 24px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
     footer a{color:var(--muted);text-decoration:underline}
-    @media(max-width:600px){nav{padding:16px 20px}.nav-links{display:none}.test-card{margin:16px 0;padding:24px 16px}.nord-banner{flex-wrap:wrap;gap:6px;font-size:12px}}
+    @media(max-width:600px){nav{padding:16px 20px}.nav-links{display:none}.test-card{margin:16px 0;padding:24px 16px}.surf-banner{flex-wrap:wrap;gap:6px;font-size:12px}}
   </style>
 </head>
 <body>
 <div class="orb orb-1"></div><div class="orb orb-2"></div>
 
-<div class="nord-banner">
-  <span class="nord-logo">NordVPN</span>
-  <span class="nord-text">🛡️ Protect your connection &amp; boost privacy</span>
-  <a class="nord-cta" href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=YOUR_AFFILIATE_ID" target="_blank" rel="noopener">Try Free 30 Days →</a>
+<div class="surf-banner">
+  <span class="surf-logo">Surfshark</span>
+  <span class="surf-text">🛡️ 🦈 Browse securely &amp; privately</span>
+  <a class="surf-cta" href="https://surfshark.com/affiliate/YOUR_AFFILIATE_ID" target="_blank" rel="noopener">Try Surfshark Free →</a>
 </div>
 
 <nav>
@@ -203,21 +203,21 @@
     <div class="result-desc" id="resultDesc">—</div>
   </div>
 
-  <div class="nord-card" id="nordCard">
-    <div class="nord-card-head">
-      <div class="nord-card-logo">NordVPN</div>
-      <div class="nord-card-badge" id="nordBadge">RECOMMENDED</div>
+  <div class="surf-card" id="surfCard">
+    <div class="surf-card-head">
+      <div class="surf-card-logo">Surfshark</div>
+      <div class="surf-card-badge" id="surfBadge">RECOMMENDED</div>
     </div>
-    <div class="nord-card-title" id="nordCardTitle">Secure &amp; speed up your connection</div>
-    <div class="nord-card-desc" id="nordCardDesc">NordVPN can optimize your routing and protect your data.</div>
-    <div class="nord-card-features">
-      <div class="nord-feat">✓ 30-day free trial</div>
-      <div class="nord-feat">✓ No logs</div>
-      <div class="nord-feat">✓ 6 devices</div>
-      <div class="nord-feat">✓ 6000+ servers</div>
+    <div class="surf-card-title" id="surfCardTitle">Secure &amp; speed up your connection</div>
+    <div class="surf-card-desc" id="surfCardDesc">Surfshark can optimize your routing and protect your data.</div>
+    <div class="surf-card-features">
+      <div class="surf-feat">✓ 30-day money back</div>
+      <div class="surf-feat">✓ No logs policy</div>
+      <div class="surf-feat">✓ Unlimited devices</div>
+      <div class="surf-feat">✓ 3200+ servers</div>
     </div>
-    <a class="nord-btn" href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=YOUR_AFFILIATE_ID" target="_blank" rel="noopener">Get NordVPN – 30 Days Free →</a>
-    <div class="nord-disclaimer">Affiliate link · We earn a commission at no cost to you</div>
+    <a class="surf-btn" href="https://surfshark.com/affiliate/YOUR_AFFILIATE_ID" target="_blank" rel="noopener">Get Surfshark – 30 Days Free →</a>
+    <div class="surf-disclaimer">Affiliate link · We earn a commission at no cost to you</div>
   </div>
 </div>
 </div>
@@ -719,29 +719,29 @@ function getRating(dl, ping) {
 
 function showNordCard(dl, ping) {
   const v = parseFloat(dl), p = parseInt(ping);
-  const badge = document.getElementById('nordBadge');
-  const title = document.getElementById('nordCardTitle');
-  const desc  = document.getElementById('nordCardDesc');
+  const badge = document.getElementById('surfBadge');
+  const title = document.getElementById('surfCardTitle');
+  const desc  = document.getElementById('surfCardDesc');
   const slowP = !isNaN(p) && p > 70;
   const slowD = !isNaN(v) && v < 25;
   if (slowP && slowD) {
     badge.textContent = '⚠️ POOR CONNECTION';
     title.textContent = 'High ping + slow speed detected';
-    desc.textContent  = `${p}ms latency and ${v} Mbps download. NordVPN can reroute through faster paths and bypass ISP throttling.`;
+    desc.textContent  = `${p}ms latency and ${v} Mbps download. Surfshark can reroute through faster paths and bypass ISP throttling.`;
   } else if (slowP) {
     badge.textContent = '📡 HIGH LATENCY';
     title.textContent = `Your ping is ${p}ms`;
-    desc.textContent  = 'NordVPN routes through optimized servers to reduce latency for gaming and calls.';
+    desc.textContent  = 'Surfshark routes through optimized servers to reduce latency for gaming and calls.';
   } else if (slowD) {
     badge.textContent = '🐢 SLOW DOWNLOAD';
     title.textContent = `Download speed is ${v} Mbps`;
-    desc.textContent  = 'ISP throttling may be slowing you down. NordVPN encrypts traffic so your ISP cannot throttle it.';
+    desc.textContent  = 'ISP throttling may be slowing you down. Surfshark encrypts traffic so your ISP cannot throttle it.';
   } else {
     badge.textContent = '🛡️ STAY PROTECTED';
     title.textContent = 'Great connection — protect your privacy';
-    desc.textContent  = 'Your speed looks solid. Use NordVPN to stay private on any network.';
+    desc.textContent  = 'Your speed looks solid. Use Surfshark to stay private on any network.';
   }
-  document.getElementById('nordCard').classList.add('show');
+  document.getElementById('surfCard').classList.add('show');
 }
 
 // ============================================================
@@ -752,7 +752,7 @@ async function startTest() {
   btn.disabled = true;
   btn.textContent = 'Testing...';
   document.getElementById('resultBox').classList.remove('show');
-  document.getElementById('nordCard').classList.remove('show');
+  document.getElementById('surfCard').classList.remove('show');
   document.getElementById('gaugeUnit').textContent = 'ms';
   document.getElementById('gaugePhase').textContent = 'TESTING PING…';
   document.getElementById('ping').textContent = '—';
