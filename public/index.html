@@ -471,7 +471,7 @@ const ALL_SERVERS = [
   { id: 'nz',         flag: '🇳🇿', name: 'New Zealand',  loc: 'Auckland',      url: 'https://www.tvnz.co.nz',             pingUrl: 'https://www.tvnz.co.nz',                       isOwn: false, region: 'asia' },
 ];
 
-let currentServer = ALL_SERVERS[0];
+let currentServer = ALL_SERVERS.find(s => s.id === 'cf');
 let testHistory = [];
 let currentRegion = 'all';
 
@@ -647,28 +647,22 @@ async function runDownloadTest() {
   const srv = currentServer;
 
   if (srv.isOwn) {
-    // Warm-up
-    try { await fetch(srv.url + '/api/download?size=1', { cache: 'no-store' }); } catch {}
-
-    const SIZE_MB = 16;
+    const SIZE_MB = 4;
     const t0 = performance.now();
-    const resp = await fetch(srv.url + '/api/download?size=' + SIZE_MB, { cache: 'no-store' });
-    await resp.arrayBuffer(); // wait for full body
+    const resp = await fetch(srv.url + '/api/download', { cache: 'no-store' });
+    await resp.arrayBuffer();
     const seconds = (performance.now() - t0) / 1000;
-    return ((SIZE_MB * 8) / seconds).toFixed(2); // Mbps = MB * 8 / s
+    return ((SIZE_MB * 8) / seconds).toFixed(2);
 
-  } else if (srv.id === 'cf') {
-    try { await fetch('https://speed.cloudflare.com/__down?bytes=500000', { cache: 'no-store' }); } catch {}
-    const BYTES = 10_000_000; // 10MB
+  } else {
+    // كل السيرفرات الخارجية → نستخدم Cloudflare Speed API (مجاني وبدون CORS)
+    try { await fetch('https://speed.cloudflare.com/__down?bytes=200000', { cache: 'no-store' }); } catch {}
+    const BYTES = 5_000_000; // 5MB
     const t0 = performance.now();
     const resp = await fetch('https://speed.cloudflare.com/__down?bytes=' + BYTES, { cache: 'no-store' });
     await resp.arrayBuffer();
     const seconds = (performance.now() - t0) / 1000;
     return (((BYTES / 1024 / 1024) * 8) / seconds).toFixed(2);
-
-  } else {
-    // External servers — only ping-style estimate, mark clearly
-    return '—';
   }
 }
 
@@ -676,23 +670,21 @@ async function runUploadTest() {
   const srv = currentServer;
 
   if (srv.isOwn) {
-    const SIZE_MB = 8;
+    const SIZE_MB = 2;
     const data = new Uint8Array(SIZE_MB * 1024 * 1024);
     const t0 = performance.now();
     await fetch(srv.url + '/api/upload', { method: 'POST', body: data, cache: 'no-store' });
     const seconds = (performance.now() - t0) / 1000;
     return ((SIZE_MB * 8) / seconds).toFixed(2);
 
-  } else if (srv.id === 'cf') {
-    const SIZE_MB = 4;
+  } else {
+    // كل السيرفرات الخارجية → Cloudflare Upload API
+    const SIZE_MB = 2;
     const data = new Uint8Array(SIZE_MB * 1024 * 1024);
     const t0 = performance.now();
     await fetch('https://speed.cloudflare.com/__up', { method: 'POST', body: data, cache: 'no-store' });
     const seconds = (performance.now() - t0) / 1000;
     return ((SIZE_MB * 8) / seconds).toFixed(2);
-
-  } else {
-    return '—';
   }
 }
 
@@ -701,10 +693,14 @@ async function runUploadTest() {
 // ============================================================
 function getRating(dl) {
   const v = parseFloat(dl);
-  if (isNaN(v)) return { emoji: '📡', title: 'Ping Only', desc: 'Full speed test available on My Server or Cloudflare.', cls: 'tag-ok', label: 'PING' };
-  if (v >= 50)  return { emoji: '🚀', title: 'Excellent!', desc: 'Perfect for 4K streaming, gaming, and HD video calls.', cls: 'tag-good', label: 'FAST' };
-  if (v >= 10)  return { emoji: '✅', title: 'Good Connection', desc: 'Suitable for HD streaming and most online activities.', cls: 'tag-ok', label: 'OK' };
-  return { emoji: '🐢', title: 'Slow Connection', desc: 'You may experience buffering. A VPN can sometimes help.', cls: 'tag-bad', label: 'SLOW' };
+  // إذا download شغال → نحكم على السرعة
+  if (!isNaN(v)) {
+    if (v >= 50) return { emoji: '🚀', title: 'Excellent!',        desc: 'Perfect for 4K streaming, gaming, and HD video calls.', cls: 'tag-good', label: 'FAST' };
+    if (v >= 10) return { emoji: '✅', title: 'Good Connection',   desc: 'Suitable for HD streaming and most online activities.', cls: 'tag-ok',   label: 'GOOD' };
+    return             { emoji: '🐢', title: 'Slow Connection',    desc: 'You may experience buffering on HD content.',           cls: 'tag-bad',  label: 'SLOW' };
+  }
+  // ping only — نحكم على الـ ping اللي حُسب مسبقاً
+  return { emoji: '📡', title: 'Ping Measured', desc: 'Full speed test available on My Server or Cloudflare.', cls: 'tag-ok', label: 'PING' };
 }
 
 function showNordCard(dl, ping) {
@@ -713,24 +709,33 @@ function showNordCard(dl, ping) {
   const badge = document.getElementById('nordBadge');
   const title = document.getElementById('nordCardTitle');
   const desc  = document.getElementById('nordCardDesc');
-  const slowPing = p > 70, slowDl = v < 25 || isNaN(v);
-  if (slowPing && slowDl) {
+
+  const slowPing = !isNaN(p) && p > 70;
+  const slowDl   = !isNaN(v) && v < 25;
+  const pingOnly = isNaN(v);
+
+  if (pingOnly) {
+    badge.textContent = '🌐 FULL TEST AVAILABLE';
+    title.textContent = 'Switch to My Server or Cloudflare for full speed test';
+    desc.textContent  = 'The selected server only supports ping measurement. Choose "My Server" or "Cloudflare" to measure download and upload speeds accurately.';
+  } else if (slowPing && slowDl) {
     badge.textContent = '⚠️ POOR CONNECTION';
     title.textContent = 'Your ping is high & your speed is low';
-    desc.textContent = `High latency (${p} ms) and slow download (${isNaN(v)?'—':v+' Mbps'}) detected. NordVPN can reroute your connection through faster servers.`;
+    desc.textContent  = `High latency (${p} ms) and slow download (${v} Mbps) detected. NordVPN can reroute your connection through faster servers and bypass ISP throttling.`;
   } else if (slowPing) {
     badge.textContent = '📡 HIGH LATENCY';
     title.textContent = `Your ping is high (${p} ms)`;
-    desc.textContent = 'NordVPN can route through closer optimized servers to reduce latency.';
+    desc.textContent  = 'High ping causes lag in gaming and video calls. NordVPN routes traffic through closer, optimized servers to reduce latency.';
   } else if (slowDl) {
     badge.textContent = '🐢 SLOW DOWNLOAD';
-    title.textContent = `Your download speed is low (${isNaN(v)?'—':v+' Mbps'})`;
-    desc.textContent = 'NordVPN encrypts your traffic so your ISP cannot throttle specific services.';
+    title.textContent = `Your download speed is low (${v} Mbps)`;
+    desc.textContent  = 'Slow speeds may be caused by ISP throttling. NordVPN encrypts your traffic so your ISP cannot throttle streaming or gaming.';
   } else {
     badge.textContent = '🛡️ STAY PROTECTED';
     title.textContent = 'Great connection — now protect your privacy';
-    desc.textContent = 'Your speed looks solid! Use NordVPN to keep your data private.';
+    desc.textContent  = 'Your speed looks solid! Use NordVPN to keep your data private from your ISP and stay secure on any network.';
   }
+
   document.getElementById('nordCard').classList.add('show');
 }
 
