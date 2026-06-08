@@ -143,18 +143,19 @@
 <div class="hero">
   <div class="hero-label">FREE &amp; ACCURATE</div>
   <h1>Test Your <span class="highlight">Real Internet Speed</span></h1>
-  <p>Download · Upload · Ping — Real servers in 30+ countries worldwide</p>
+  <p>Download · Upload · Ping — Auto-detects your closest server from 30+ countries</p>
 </div>
 
 <div class="worker-notice">
   <div class="wn-box">
-    🌍 <span>Ping tests use <strong>real servers</strong> (AWS · Azure · GCP · Cloudflare) located in each country — true geographic latency measurement. Speed test requires your <strong>Cloudflare Worker URL</strong>.</span>
+    🌍 <span>Ping uses <strong>real servers</strong> per country · Download/Upload via <strong>Cloudflare CDN</strong> · Server auto-selected based on your location</span>
   </div>
 </div>
 
 <!-- SERVER SELECTOR -->
 <div class="server-select-wrap">
-  <div class="server-label">🌍 SELECT TEST SERVER — click to choose your preferred server for speed test</div>
+  <div class="server-label">🌍 SELECT TEST SERVER — auto-selected based on your location</div>
+  <div id="autoServerLabel" style="font-size:12px;color:var(--accent);margin-bottom:10px;min-height:18px;font-weight:600;">🔍 Detecting your location...</div>
   <div class="region-tabs" id="regionTabs">
     <div class="region-tab active" onclick="showRegion('all',this)">🌐 All</div>
     <div class="region-tab" onclick="showRegion('americas',this)">🌎 Americas</div>
@@ -247,7 +248,7 @@
 // ⚙️  Worker URL للـ Speed Test (Download / Upload)
 // استبدل بـ worker URL بعد Deploy على Cloudflare
 // ============================================================
-const WORKER = 'https://YOUR_WORKER.workers.dev';
+// speed.cloudflare.com is used directly — no Worker needed
 
 // ============================================================
 // 🌍 REAL PING ENDPOINTS — خوادم حقيقية في كل دولة
@@ -520,7 +521,72 @@ async function pingAllInBackground() {
 }
 
 // ============================================================
-// IP INFO
+// حساب المسافة بين نقطتين جغرافيتين (Haversine formula)
+// ============================================================
+function geoDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 +
+            Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+            Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// إحداثيات كل سيرفر (تقريبية لمركز المنطقة)
+const SERVER_COORDS = {
+  'cf':  { lat: 37.8,   lon: -122.4 }, // Cloudflare anycast
+  'us':  { lat: 38.9,   lon: -77.0  }, // N. Virginia
+  'ca':  { lat: 45.5,   lon: -73.6  }, // Montreal
+  'br':  { lat: -23.5,  lon: -46.6  }, // São Paulo
+  'mx':  { lat: 20.6,   lon: -100.4 }, // Querétaro
+  'ie':  { lat: 53.3,   lon: -6.3   }, // Dublin
+  'gb':  { lat: 51.5,   lon: -0.1   }, // London
+  'fr':  { lat: 48.9,   lon: 2.3    }, // Paris
+  'de':  { lat: 50.1,   lon: 8.7    }, // Frankfurt
+  'se':  { lat: 59.3,   lon: 18.1   }, // Stockholm
+  'ae':  { lat: 25.2,   lon: 55.3   }, // Dubai
+  'bh':  { lat: 26.2,   lon: 50.6   }, // Bahrain
+  'sa':  { lat: 24.7,   lon: 46.7   }, // Riyadh
+  'za':  { lat: -33.9,  lon: 18.4   }, // Cape Town
+  'jp':  { lat: 35.7,   lon: 139.7  }, // Tokyo
+  'sg':  { lat: 1.3,    lon: 103.8  }, // Singapore
+  'au':  { lat: -33.9,  lon: 151.2  }, // Sydney
+  'in':  { lat: 19.1,   lon: 72.9   }, // Mumbai
+  'kr':  { lat: 37.6,   lon: 126.9  }, // Seoul
+};
+
+// ============================================================
+// AUTO-DETECT: يجد أقرب سيرفر بطريقتين
+// 1) جغرافياً من الـ IP
+// 2) يقيس ping للسيرفرات القريبة ويختار الأسرع
+// ============================================================
+async function autoDetectBestServer(userLat, userLon) {
+  // رتّب السيرفرات حسب المسافة الجغرافية
+  const ranked = SERVERS
+    .filter(s => SERVER_COORDS[s.id])
+    .map(s => {
+      const c = SERVER_COORDS[s.id];
+      return { srv: s, dist: geoDistance(userLat, userLon, c.lat, c.lon) };
+    })
+    .sort((a, b) => a.dist - b.dist);
+
+  // قِس ping لأقرب 4 سيرفرات فقط (أسرع)
+  const top4 = ranked.slice(0, 4);
+  const results = [];
+
+  for (const item of top4) {
+    const ms = await measurePing(item.srv.pingUrl);
+    if (ms !== null) results.push({ srv: item.srv, ms });
+  }
+
+  if (!results.length) return ranked[0]?.srv || SERVERS[0];
+  results.sort((a, b) => a.ms - b.ms);
+  return results[0].srv;
+}
+
+// ============================================================
+// IP INFO + AUTO-SELECT SERVER
 // ============================================================
 async function loadIP() {
   try {
@@ -528,6 +594,23 @@ async function loadIP() {
     document.getElementById('ipAddr').textContent  = d.ip || 'N/A';
     document.getElementById('ispName').textContent = d.org ? d.org.substring(0,22) : 'N/A';
     document.getElementById('locName').textContent = (d.city || '') + ', ' + (d.country_code || '');
+
+    // ── AUTO-DETECT أقرب سيرفر ──
+    if (d.latitude && d.longitude) {
+      const label = document.getElementById('autoServerLabel');
+      if (label) label.textContent = '🔍 Finding best server...';
+
+      const best = await autoDetectBestServer(d.latitude, d.longitude);
+
+      // حدّث الـ UI
+      currentServer = best;
+      document.querySelectorAll('.server-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.id === best.id);
+      });
+      document.getElementById('gaugePhase').textContent = '✅ BEST: ' + best.name.toUpperCase();
+      if (label) label.textContent = '✅ Best server: ' + best.flag + ' ' + best.name + ' (' + best.loc + ')';
+    }
+
   } catch {
     document.getElementById('ipAddr').textContent  = 'N/A';
     document.getElementById('ispName').textContent = 'N/A';
@@ -560,25 +643,26 @@ function setDone(id) {
 }
 
 // ============================================================
-// SPEED TESTS — يستخدم الـ Worker URL
+// SPEED TESTS — speed.cloudflare.com (يعمل فوراً بدون Worker)
 // ============================================================
 async function runDownload() {
-  try { await fetch(WORKER + '/download?bytes=100000', { cache:'no-store' }); } catch {}
-  const BYTES = 5_000_000; // 5MB
+  // warm-up
+  try { await fetch('https://speed.cloudflare.com/__down?bytes=102400',{cache:'no-store'}); } catch{}
+  const BYTES = 5_000_000;
   const t0 = performance.now();
-  const resp = await fetch(WORKER + '/download?bytes=' + BYTES, { cache:'no-store' });
+  const resp = await fetch('https://speed.cloudflare.com/__down?bytes='+BYTES,{cache:'no-store'});
   await resp.arrayBuffer();
-  const secs = (performance.now() - t0) / 1000;
-  return ((BYTES / 1024 / 1024 * 8) / secs).toFixed(2);
+  const secs = (performance.now()-t0)/1000;
+  return ((BYTES/1024/1024*8)/secs).toFixed(2);
 }
 
 async function runUpload() {
   const SIZE_MB = 2;
-  const data = new Uint8Array(SIZE_MB * 1024 * 1024);
+  const data = new Uint8Array(SIZE_MB*1024*1024);
   const t0 = performance.now();
-  await fetch(WORKER + '/upload', { method:'POST', body:data, cache:'no-store' });
-  const secs = (performance.now() - t0) / 1000;
-  return ((SIZE_MB * 8) / secs).toFixed(2);
+  await fetch('https://speed.cloudflare.com/__up',{method:'POST',body:data,cache:'no-store'});
+  const secs = (performance.now()-t0)/1000;
+  return ((SIZE_MB*8)/secs).toFixed(2);
 }
 
 // ============================================================
@@ -586,7 +670,7 @@ async function runUpload() {
 // ============================================================
 function getRating(dl, ping) {
   const v = parseFloat(dl), p = parseInt(ping);
-  if (isNaN(v)) return { emoji:'📡', title:'Ping Only', desc:'Worker URL not configured — ping test only.', cls:'tag-ok', label:'PING' };
+  if (isNaN(v)) return { emoji:'📡', title:'Ping Only', desc:'Speed test unavailable. Ping result shown only.', cls:'tag-ok', label:'PING' };
   if (v >= 50)  return { emoji:'🚀', title:'Excellent!', desc:'Perfect for 4K streaming, gaming & HD calls.', cls:'tag-good', label:'FAST' };
   if (v >= 10)  return { emoji:'✅', title:'Good Connection', desc:'Suitable for HD streaming and most activities.', cls:'tag-ok', label:'GOOD' };
   return { emoji:'🐢', title:'Slow Connection', desc:'You may experience buffering on HD content.', cls:'tag-bad', label:'SLOW' };
