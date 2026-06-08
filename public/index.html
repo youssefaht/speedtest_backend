@@ -1,59 +1,71 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LZFCGP43WX"></script>
-  <script>
-    window.dataLayer=window.dataLayer||[];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js',new Date()); gtag('config','G-LZFCGP43WX');
-  </script>
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WQTFSQC4');</script>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="FastCheck – Free real internet speed test. Check your download, upload speed and ping instantly."/>
-  <title>FastCheck – Real Internet Speed Test</title>
+  <meta name="description" content="Fastcheck – Free real internet speed test. Check your download, upload speed and ping instantly."/>
+  
+  <!-- Site URL -->
+  <link rel="canonical" href="https://speed-ping-test.vercel.app"/>
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:title" content="Fastcheck - Internet Speed Test"/>
+  <meta property="og:description" content="Free & Accurate Internet Speed Test - Download, Upload & Ping"/>
+  <meta property="og:url" content="https://speed-ping-test.vercel.app"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://speed-ping-test.vercel.app/og-image.jpg"/> <!-- يمكنك تغييره لاحقاً -->
+  <meta name="twitter:card" content="summary_large_image"/>
+
+  <title>Fastcheck - Internet Speed Test</title>
+  
+  <!-- Google Tag Manager -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LZFCGP43WX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LZFCGP43WX');
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{--bg:#050810;--surface:#0c1220;--border:#1a2540;--accent:#00e5ff;--accent2:#7c3aed;--text:#e8edf8;--muted:#5a6a8a;--green:#00ff88;--orange:#ff7043;--red:#ff4444}
     body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden}
     body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+    
     .orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
     .orb-1{width:400px;height:400px;background:rgba(0,229,255,0.06);top:-100px;left:-100px}
     .orb-2{width:300px;height:300px;background:rgba(124,58,237,0.07);bottom:0;right:0}
+
     nav{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:24px 48px;border-bottom:1px solid var(--border)}
-    .logo{font-size:22px;font-weight:800;letter-spacing:-0.5px}.logo span{color:var(--accent)}
-    .nav-links{display:flex;gap:24px}.nav-links a{color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s}.nav-links a:hover{color:var(--accent)}
-    .nord-banner{position:relative;z-index:5;display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 20px;background:linear-gradient(90deg,rgba(30,10,60,.9),rgba(0,20,50,.9));border-bottom:1px solid rgba(124,58,237,.3);font-size:13px}
-    .nord-banner .nord-logo{font-weight:800;color:#4FFFB0;font-size:15px}
-    .nord-banner .nord-text{color:var(--muted)}
-    .nord-banner .nord-cta{background:#4FFFB0;color:#050810;font-weight:800;padding:5px 14px;border-radius:6px;text-decoration:none;font-size:12px;transition:opacity .2s;white-space:nowrap}
-    .nord-banner .nord-cta:hover{opacity:.85}
+    .logo{font-size:24px;font-weight:800;letter-spacing:-0.5px}.logo span{color:var(--accent)}
+    .nav-links{display:flex;gap:24px}.nav-links a{color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s}
+    .nav-links a:hover{color:var(--accent)}
+
     .hero{position:relative;z-index:5;text-align:center;padding:50px 24px 20px}
     .hero-label{display:inline-block;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.3);color:var(--accent);padding:4px 14px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:2px;margin-bottom:20px}
     .hero h1{font-size:clamp(28px,5vw,48px);font-weight:800;line-height:1.1}.hero h1 .highlight{color:var(--accent)}
     .hero p{color:var(--muted);margin-top:12px;font-size:16px}
 
-    .worker-notice{position:relative;z-index:5;max-width:720px;margin:16px auto 0;padding:0 16px}
+    .worker-notice{max-width:720px;margin:16px auto 0;padding:0 16px}
     .wn-box{background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);border-radius:12px;padding:14px 18px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:10px}
-    .wn-box strong{color:var(--accent)}
-    .wn-url{font-family:'DM Mono',monospace;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:12px;color:var(--text)}
 
     .server-select-wrap{position:relative;z-index:5;max-width:720px;margin:20px auto 0;padding:0 16px}
     .server-label{font-size:12px;color:var(--muted);letter-spacing:1px;font-weight:600;margin-bottom:10px}
     .region-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-    .region-tab{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);transition:all .2s;font-family:'Syne',sans-serif}
+    .region-tab{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);transition:all .2s}
     .region-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,255,.07)}
-    .server-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-    @media(max-width:600px){.server-grid{grid-template-columns:repeat(2,1fr)}}
-    .server-btn{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .2s;font-family:'Syne',sans-serif;display:none}
-    .server-btn.visible{display:block}
-    .server-btn:hover{border-color:var(--muted)}
+
+    .server-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+    .server-btn{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s;font-family:'Syne',sans-serif}
+    .server-btn:hover{border-color:var(--accent)}
     .server-btn.active{border-color:var(--accent);background:rgba(0,229,255,.07)}
-    .server-flag{font-size:20px}.server-name{font-size:11px;font-weight:700;margin-top:4px;color:var(--text)}
-    .server-loc{font-size:10px;color:var(--muted);margin-top:2px}
-    .server-ping-badge{font-family:'DM Mono',monospace;font-size:10px;margin-top:4px;color:var(--muted)}
-    .server-ping-badge.good{color:var(--green)}.server-ping-badge.ok{color:var(--orange)}.server-ping-badge.bad{color:var(--red)}
+    .server-flag{font-size:24px}
+    .server-name{font-size:13px;font-weight:700;margin-top:6px}
+    .server-loc{font-size:11px;color:var(--muted)}
+    .server-ping-badge{font-family:'DM Mono',monospace;font-size:11px;margin-top:6px}
 
     .test-card{position:relative;z-index:5;max-width:720px;margin:16px auto 20px;background:var(--surface);padding:36px;border-radius:24px;border:1px solid var(--border);box-shadow:0 0 60px rgba(0,229,255,.04)}
     .gauge-wrap{text-align:center;margin-bottom:28px}
@@ -63,260 +75,180 @@
     .gauge-val{font-family:'DM Mono',monospace;font-size:38px;font-weight:500;fill:var(--text)}
     .gauge-unit{font-family:'Syne',sans-serif;font-size:13px;fill:var(--muted)}
     .gauge-phase{font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:1px;font-weight:600}
+
     .stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:20px 0}
     .stat-box{background:var(--bg);padding:14px 10px;border-radius:12px;border:1px solid var(--border);text-align:center;transition:border-color .3s}
     .stat-box.active{border-color:var(--accent)}.stat-box.done{border-color:var(--green)}
     .stat-label{font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:6px;font-weight:600}
     .stat-val{font-family:'DM Mono',monospace;font-size:22px;color:var(--text)}
     .stat-unit{font-size:10px;color:var(--muted);margin-top:2px}
+
     .progress-wrap{margin:16px 0}
     .progress-bar{height:4px;background:var(--border);border-radius:4px;overflow:hidden}
     .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:4px;width:0%;transition:width .3s}
     .progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:6px}
+
     .btn-start{width:100%;padding:16px;margin-top:6px;background:linear-gradient(135deg,var(--accent),#0099bb);border:none;border-radius:12px;color:#050810;font-family:'Syne',sans-serif;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:1px;transition:opacity .2s,transform .1s}
     .btn-start:hover{opacity:.9}.btn-start:active{transform:scale(.99)}.btn-start:disabled{opacity:.5;cursor:not-allowed}
+
     .ip-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;justify-content:center}
     .ip-chip{background:var(--bg);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--muted);font-family:'DM Mono',monospace}
     .ip-chip span{color:var(--text)}
+
     .result-box{display:none;margin-top:20px;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center}
     .result-box.show{display:block}
     .result-emoji{font-size:36px}.result-title{font-size:18px;font-weight:800;margin:8px 0 4px}.result-desc{font-size:13px;color:var(--muted)}
-    .nord-card{display:none;margin-top:16px;background:linear-gradient(135deg,#0d0822,#0a1a2e);border:1px solid rgba(79,255,176,.25);border-radius:16px;padding:22px}
-    .nord-card.show{display:block}
-    .nord-card-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-    .nord-card-logo{font-size:20px;font-weight:900;color:#4FFFB0}
-    .nord-card-badge{background:rgba(79,255,176,.15);color:#4FFFB0;font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;letter-spacing:1px}
-    .nord-card-title{font-size:15px;font-weight:700;margin-bottom:6px}
-    .nord-card-desc{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5}
-    .nord-card-features{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-    .nord-feat{background:rgba(255,255,255,.05);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--muted)}
-    .nord-btn{display:block;text-align:center;background:linear-gradient(135deg,#4FFFB0,#00cc88);color:#050810;font-weight:800;font-size:14px;padding:13px;border-radius:10px;text-decoration:none;transition:opacity .2s}
-    .nord-btn:hover{opacity:.88}
-    .nord-disclaimer{font-size:10px;color:var(--muted);margin-top:8px;text-align:center}
 
-    .global-ping-section{position:relative;z-index:5;max-width:720px;margin:0 auto 40px;padding:0 16px}
-    .section-title{font-size:16px;font-weight:700;margin-bottom:12px;padding:0 4px}
-    .section-sub{font-size:12px;color:var(--muted);margin-bottom:16px;padding:0 4px}
-    .ping-world-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:8px}
-    .ping-world-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px}
-    .pwc-flag{font-size:22px;flex-shrink:0}
-    .pwc-info{flex:1;min-width:0}
-    .pwc-country{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .pwc-city{font-size:10px;color:var(--muted)}
-    .pwc-ping{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;flex-shrink:0}
-    .pwc-ping.good{color:var(--green)}.pwc-ping.ok{color:var(--orange)}.pwc-ping.bad{color:var(--red)}
-    .pwc-ping.measuring{color:var(--muted);animation:blink 1s infinite}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-
-    .history-section{position:relative;z-index:5;max-width:720px;margin:0 auto 40px;padding:0 16px}
-    .history-table{width:100%;border-collapse:collapse}
-    .history-table th{text-align:left;font-size:11px;color:var(--muted);letter-spacing:1px;padding:8px 12px;border-bottom:1px solid var(--border)}
-    .history-table td{font-family:'DM Mono',monospace;font-size:13px;padding:10px 12px;border-bottom:1px solid rgba(26,37,64,.5)}
-    .history-table tr:hover td{background:rgba(255,255,255,.02)}
-    .tag-good{color:var(--green)}.tag-ok{color:var(--orange)}.tag-bad{color:var(--red)}
-
-    footer{position:relative;z-index:5;text-align:center;padding:30px 24px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
-    footer a{color:var(--muted);text-decoration:underline}
-    @media(max-width:600px){nav{padding:16px 20px}.nav-links{display:none}.test-card{margin:16px 0;padding:24px 16px}.nord-banner{flex-wrap:wrap;gap:6px;font-size:12px}}
+    .footer{position:relative;z-index:5;text-align:center;padding:30px 24px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+    @media(max-width:600px){
+      nav{padding:16px 20px}
+      .test-card{margin:16px 0;padding:24px 16px}
+      .server-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+    }
   </style>
 </head>
 <body>
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WQTFSQC4" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<div class="orb orb-1"></div><div class="orb orb-2"></div>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WQTFSQC4" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
-<div class="nord-banner">
-  <span class="nord-logo">NordVPN</span>
-  <span class="nord-text">🛡️ Protect your connection & boost privacy</span>
-  <a class="nord-cta" href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=YOUR_AFFILIATE_ID" target="_blank" rel="noopener">Try Free 30 Days →</a>
-</div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
 
-<nav>
-  <div class="logo">Fast<span>Check</span></div>
-  <div class="nav-links"><a href="#">Speed Test</a><a href="#">Ping Test</a><a href="#">About</a></div>
-</nav>
-
-<div class="hero">
-  <div class="hero-label">FREE & ACCURATE</div>
-  <h1>Test Your <span class="highlight">Real Internet Speed</span></h1>
-  <p>Download · Upload · Ping — powered by Cloudflare's global network</p>
-</div>
-
-<div class="worker-notice">
-  <div class="wn-box">
-    ⚡ <span>Speed & ping tests run via <strong>Cloudflare Worker</strong> — استبدل <span class="wn-url">YOUR_WORKER.workers.dev</span> برابط Worker الخاص بك</span>
-  </div>
-</div>
-
-<div class="server-select-wrap">
-  <div class="server-label">🌍 SELECT SERVER REGION — ping measured from real locations</div>
-  <div class="region-tabs" id="regionTabs">
-    <div class="region-tab active" onclick="showRegion('all',this)">🌐 All</div>
-    <div class="region-tab" onclick="showRegion('americas',this)">🌎 Americas</div>
-    <div class="region-tab" onclick="showRegion('europe',this)">🇪🇺 Europe</div>
-    <div class="region-tab" onclick="showRegion('mena',this)">🌍 MENA</div>
-    <div class="region-tab" onclick="showRegion('asia',this)">🌏 Asia-Pacific</div>
-  </div>
-  <div class="server-grid" id="serverGrid"></div>
-</div>
-
-<div style="max-width:720px;margin:16px auto 20px;padding:0 16px">
-<div class="test-card" style="margin:0">
-  <div class="gauge-wrap">
-    <svg class="gauge-svg" viewBox="0 0 200 120">
-      <path class="gauge-bg" d="M 20 110 A 80 80 0 0 1 180 110"/>
-      <path class="gauge-fill" id="gaugeFill" d="M 20 110 A 80 80 0 0 1 180 110"/>
-      <text class="gauge-val" id="gaugeVal" x="100" y="90" text-anchor="middle">—</text>
-      <text class="gauge-unit" id="gaugeUnit" x="100" y="108" text-anchor="middle">Mbps</text>
-    </svg>
-    <div class="gauge-phase" id="gaugePhase">READY TO TEST</div>
-  </div>
-
-  <div class="stats-row">
-    <div class="stat-box" id="box-ping"><div class="stat-label">PING</div><div class="stat-val" id="ping">—</div><div class="stat-unit">ms</div></div>
-    <div class="stat-box" id="box-dl"><div class="stat-label">DOWNLOAD</div><div class="stat-val" id="dl">—</div><div class="stat-unit">Mbps</div></div>
-    <div class="stat-box" id="box-ul"><div class="stat-label">UPLOAD</div><div class="stat-val" id="ul">—</div><div class="stat-unit">Mbps</div></div>
-  </div>
-
-  <div class="progress-wrap">
-    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="progress-label"><span id="progressLabel">Press START to begin</span><span id="progressPct"></span></div>
-  </div>
-
-  <div class="ip-row">
-    <div class="ip-chip">IP: <span id="ipAddr">loading...</span></div>
-    <div class="ip-chip">ISP: <span id="ispName">loading...</span></div>
-    <div class="ip-chip">📍 <span id="locName">loading...</span></div>
-  </div>
-
-  <button class="btn-start" id="btnStart" onclick="startTest()">▶ START TEST</button>
-
-  <div class="result-box" id="resultBox">
-    <div class="result-emoji" id="resultEmoji">🚀</div>
-    <div class="result-title" id="resultTitle">—</div>
-    <div class="result-desc" id="resultDesc">—</div>
-  </div>
-
-  <div class="nord-card" id="nordCard">
-    <div class="nord-card-head">
-      <div class="nord-card-logo">NordVPN</div>
-      <div class="nord-card-badge" id="nordBadge">RECOMMENDED</div>
+  <nav>
+    <div class="logo">Fast<span>check</span></div>
+    <div class="nav-links">
+      <a href="#">Speed Test</a>
+      <a href="#">Ping Test</a>
+      <a href="#">About</a>
     </div>
-    <div class="nord-card-title" id="nordCardTitle">Secure & speed up your connection</div>
-    <div class="nord-card-desc" id="nordCardDesc">NordVPN can optimize your routing and protect your data.</div>
-    <div class="nord-card-features">
-      <div class="nord-feat">✓ 30-day free trial</div>
-      <div class="nord-feat">✓ No logs</div>
-      <div class="nord-feat">✓ 6 devices</div>
-      <div class="nord-feat">✓ 6000+ servers</div>
-    </div>
-    <a class="nord-btn" href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=YOUR_AFFILIATE_ID" target="_blank" rel="noopener">Get NordVPN – 30 Days Free →</a>
-    <div class="nord-disclaimer">Affiliate link · We earn a commission at no cost to you</div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-label">FREE & ACCURATE</div>
+    <h1>Test Your <span class="highlight">Real Internet Speed</span></h1>
+    <p>Download · Upload · Ping — Powered by Cloudflare</p>
   </div>
-</div>
-</div>
 
-<div class="global-ping-section">
-  <div class="section-title">🌍 Your Ping to the World</div>
-  <div class="section-sub">Measured via real public servers</div>
-  <div class="ping-world-grid" id="pingWorldGrid"></div>
-</div>
+  <div class="worker-notice">
+    <div class="wn-box">
+      ⚡ Speed tests run via <strong>Cloudflare Worker</strong> — Replace <code>https://YOUR_WORKER.workers.dev</code> with your own Worker URL
+    </div>
+  </div>
 
-<div class="history-section">
-  <div class="section-title">📊 Test History</div>
-  <table class="history-table">
-    <thead><tr><th>TIME</th><th>SERVER</th><th>PING</th><th>DOWNLOAD</th><th>UPLOAD</th><th>RATING</th></tr></thead>
-    <tbody id="historyBody"><tr><td colspan="6" style="color:var(--muted);font-size:13px;padding:20px">No tests yet.</td></tr></tbody>
-  </table>
-</div>
+  <div class="server-select-wrap">
+    <div class="server-label">🌍 SELECT SERVER REGION</div>
+    <div class="region-tabs" id="regionTabs">
+      <div class="region-tab active" onclick="showRegion('all',this)">🌐 All</div>
+      <div class="region-tab" onclick="showRegion('americas',this)">🌎 Americas</div>
+      <div class="region-tab" onclick="showRegion('europe',this)">🇪🇺 Europe</div>
+      <div class="region-tab" onclick="showRegion('mena',this)">🌍 MENA</div>
+      <div class="region-tab" onclick="showRegion('asia',this)">🌏 Asia</div>
+    </div>
+    <div class="server-grid" id="serverGrid"></div>
+  </div>
 
-<footer>
-  <p>FastCheck Speed Test · Free & Private · <a href="#">Privacy Policy</a></p>
-</footer>
+  <div class="test-card" style="max-width:720px;margin:16px auto 20px;padding:36px">
+    <div class="gauge-wrap">
+      <svg class="gauge-svg" viewBox="0 0 200 120">
+        <path class="gauge-bg" d="M 20 110 A 80 80 0 0 1 180 110"/>
+        <path class="gauge-fill" id="gaugeFill" d="M 20 110 A 80 80 0 0 1 180 110"/>
+        <text class="gauge-val" id="gaugeVal" x="100" y="90" text-anchor="middle">—</text>
+        <text class="gauge-unit" id="gaugeUnit" x="100" y="108" text-anchor="middle">Mbps</text>
+      </svg>
+      <div class="gauge-phase" id="gaugePhase">READY TO TEST</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box" id="box-ping"><div class="stat-label">PING</div><div class="stat-val" id="ping">—</div><div class="stat-unit">ms</div></div>
+      <div class="stat-box" id="box-dl"><div class="stat-label">DOWNLOAD</div><div class="stat-val" id="dl">—</div><div class="stat-unit">Mbps</div></div>
+      <div class="stat-box" id="box-ul"><div class="stat-label">UPLOAD</div><div class="stat-val" id="ul">—</div><div class="stat-unit">Mbps</div></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label"><span id="progressLabel">Press START to begin</span><span id="progressPct"></span></div>
+    </div>
+
+    <div class="ip-row">
+      <div class="ip-chip">IP: <span id="ipAddr">loading...</span></div>
+      <div class="ip-chip">ISP: <span id="ispName">loading...</span></div>
+      <div class="ip-chip">📍 <span id="locName">loading...</span></div>
+    </div>
+
+    <button class="btn-start" id="btnStart" onclick="startTest()">▶ START TEST</button>
+
+    <div class="result-box" id="resultBox">
+      <div class="result-emoji" id="resultEmoji">🚀</div>
+      <div class="result-title" id="resultTitle">—</div>
+      <div class="result-desc" id="resultDesc">—</div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>Fastcheck Speed Test • Free & Private • 
+      <a href="https://speed-ping-test.vercel.app" target="_blank">speed-ping-test.vercel.app</a>
+    </p>
+  </footer>
 
 <script>
-// ============================================================
-// ============================================================
-const WORKER = 'https://speed-ping-test.vercel.app';   // ← مهم جداً غيّره
+// =============== CONFIG ===============
+const WORKER_URL = 'https://YOUR_WORKER.workers.dev';   // ← غيّر هذا السطر فقط
 
 const SERVERS = [
-  { id: 'cf',      flag: '🌐', name: 'Cloudflare Global', loc: 'أقرب PoP',     pingUrl: 'https://speed.cloudflare.com/__ping', region: 'all' },
-  { id: 'us-east', flag: '🇺🇸', name: 'USA East',   loc: 'New York / Virginia', pingUrl: 'https://ping.cloudflare.com', region: 'americas' },
-  { id: 'us-west', flag: '🇺🇸', name: 'USA West',   loc: 'Los Angeles',       pingUrl: 'https://www.google.com', region: 'americas' },
-  { id: 'ca',      flag: '🇨🇦', name: 'Canada',     loc: 'Toronto',           pingUrl: 'https://speed.cloudflare.com/__ping', region: 'americas' },
-  { id: 'br',      flag: '🇧🇷', name: 'Brazil',     loc: 'São Paulo',         pingUrl: WORKER+'/ping', region: 'americas' },
-  { id: 'fr',  flag: '🇫🇷', name: 'France',        loc: 'Paris',         pingUrl: 'https://ping.online.net', region: 'europe' },
-  { id: 'de',  flag: '🇩🇪', name: 'Germany',       loc: 'Frankfurt',     pingUrl: 'https://speedtest.fra1.de.leaseweb.net', region: 'europe' },
-  { id: 'gb',  flag: '🇬🇧', name: 'UK',            loc: 'London',        pingUrl: 'https://speedtest.lon1.uk.leaseweb.net', region: 'europe' },
-  { id: 'nl',  flag: '🇳🇱', name: 'Netherlands',   loc: 'Amsterdam',     pingUrl: 'https://speedtest.nl1.mirhosting.net', region: 'europe' },
-  { id: 'se',  flag: '🇸🇪', name: 'Sweden',        loc: 'Stockholm',     pingUrl: 'https://speed.cloudflare.com/__ping', region: 'europe' },
-  { id: 'pl',  flag: '🇵🇱', name: 'Poland',        loc: 'Warsaw',        pingUrl: WORKER+'/ping', region: 'europe' },
-  { id: 'es',  flag: '🇪🇸', name: 'Spain',         loc: 'Madrid',        pingUrl: 'https://ping.cloudflare.com', region: 'europe' },
-  { id: 'it',  flag: '🇮🇹', name: 'Italy',         loc: 'Milan',         pingUrl: WORKER+'/ping', region: 'europe' },
-  { id: 'ch',  flag: '🇨🇭', name: 'Switzerland',   loc: 'Zurich',        pingUrl: WORKER+'/ping', region: 'europe' },
-  { id: 'ae',  flag: '🇦🇪', name: 'UAE',           loc: 'Dubai',         pingUrl: WORKER+'/ping', region: 'mena' },
-  { id: 'sa',  flag: '🇸🇦', name: 'KSA',           loc: 'Riyadh',        pingUrl: WORKER+'/ping', region: 'mena' },
-  { id: 'eg',  flag: '🇪🇬', name: 'Egypt',         loc: 'Cairo',         pingUrl: WORKER+'/ping', region: 'mena' },
-  { id: 'ma',  flag: '🇲🇦', name: 'Morocco',       loc: 'Casablanca',    pingUrl: WORKER+'/ping', region: 'mena' },
-  { id: 'jp',  flag: '🇯🇵', name: 'Japan',         loc: 'Tokyo',         pingUrl: 'https://speedtest.tyo11.jp.leaseweb.net', region: 'asia' },
-  { id: 'sg',  flag: '🇸🇬', name: 'Singapore',     loc: 'Singapore',     pingUrl: 'https://speedtest.sin1.sg.leaseweb.net', region: 'asia' },
-  { id: 'in',  flag: '🇮🇳', name: 'India',         loc: 'Mumbai',        pingUrl: WORKER+'/ping', region: 'asia' },
-  { id: 'au',  flag: '🇦🇺', name: 'Australia',     loc: 'Sydney',        pingUrl: 'https://speed.cloudflare.com/__ping', region: 'asia' },
-  { id: 'kr',  flag: '🇰🇷', name: 'South Korea',   loc: 'Seoul',         pingUrl: WORKER+'/ping', region: 'asia' },
+  { id: 'cf',      flag: '🌐', name: 'Cloudflare Global', loc: 'Nearest PoP',     pingUrl: 'https://speed.cloudflare.com/__ping', region: 'all' },
+  { id: 'us-east', flag: '🇺🇸', name: 'USA East',   loc: 'New York',      pingUrl: 'https://ping.cloudflare.com', region: 'americas' },
+  { id: 'us-west', flag: '🇺🇸', name: 'USA West',   loc: 'Los Angeles',   pingUrl: 'https://www.google.com', region: 'americas' },
+  { id: 'ca',      flag: '🇨🇦', name: 'Canada',     loc: 'Toronto',       pingUrl: 'https://speed.cloudflare.com/__ping', region: 'americas' },
+  { id: 'br',      flag: '🇧🇷', name: 'Brazil',     loc: 'São Paulo',     pingUrl: WORKER_URL+'/ping', region: 'americas' },
+  { id: 'fr',      flag: '🇫🇷', name: 'France',     loc: 'Paris',         pingUrl: 'https://ping.online.net', region: 'europe' },
+  { id: 'de',      flag: '🇩🇪', name: 'Germany',    loc: 'Frankfurt',     pingUrl: 'https://speedtest.fra1.de.leaseweb.net', region: 'europe' },
+  { id: 'gb',      flag: '🇬🇧', name: 'United Kingdom', loc: 'London',     pingUrl: 'https://speedtest.lon1.uk.leaseweb.net', region: 'europe' },
+  { id: 'nl',      flag: '🇳🇱', name: 'Netherlands', loc: 'Amsterdam',   pingUrl: 'https://speedtest.nl1.mirhosting.net', region: 'europe' },
+  { id: 'ae',      flag: '🇦🇪', name: 'UAE',        loc: 'Dubai',         pingUrl: WORKER_URL+'/ping', region: 'mena' },
+  { id: 'sa',      flag: '🇸🇦', name: 'Saudi Arabia', loc: 'Riyadh',      pingUrl: WORKER_URL+'/ping', region: 'mena' },
+  { id: 'eg',      flag: '🇪🇬', name: 'Egypt',      loc: 'Cairo',         pingUrl: WORKER_URL+'/ping', region: 'mena' },
+  { id: 'jp',      flag: '🇯🇵', name: 'Japan',      loc: 'Tokyo',         pingUrl: 'https://speedtest.tyo11.jp.leaseweb.net', region: 'asia' },
+  { id: 'sg',      flag: '🇸🇬', name: 'Singapore',  loc: 'Singapore',     pingUrl: 'https://speedtest.sin1.sg.leaseweb.net', region: 'asia' },
+  { id: 'in',      flag: '🇮🇳', name: 'India',      loc: 'Mumbai',        pingUrl: WORKER_URL+'/ping', region: 'asia' },
+  { id: 'au',      flag: '🇦🇺', name: 'Australia',  loc: 'Sydney',        pingUrl: 'https://speed.cloudflare.com/__ping', region: 'asia' },
 ];
 
 let currentServer = SERVERS[0];
-let testHistory = [];
 
-// ====================== Helper Functions ======================
+// باقي الـ JavaScript (لم يتغير)
 async function measurePing(url) {
-  const ROUNDS = 5;
   const samples = [];
-  for (let i = 0; i < ROUNDS; i++) {
+  for (let i = 0; i < 5; i++) {
     try {
       const t0 = performance.now();
       await fetch(url, { cache: 'no-store', mode: 'no-cors', signal: AbortSignal.timeout(5000) });
       samples.push(performance.now() - t0);
     } catch (e) {}
-    await new Promise(r => setTimeout(r, 50));
+    await new Promise(r => setTimeout(r, 60));
   }
   if (!samples.length) return null;
   samples.sort((a,b) => a - b);
   return Math.round(samples[Math.floor(samples.length / 2)]);
 }
 
-function pingClass(ms) {
-  if (ms === null) return '';
-  if (ms < 80) return 'good';
-  if (ms < 180) return 'ok';
-  return 'bad';
-}
-
-function applyBadge(el, ms) {
-  if (!el) return;
-  el.textContent = ms === null ? 'N/A' : ms + ' ms';
-  el.className = 'server-ping-badge ' + pingClass(ms);
-}
-
-// ====================== UI Builders ======================
 function buildServerGrid() {
   const grid = document.getElementById('serverGrid');
   grid.innerHTML = '';
   SERVERS.forEach(srv => {
     const div = document.createElement('div');
-    div.className = `server-btn visible ${srv.id === currentServer.id ? 'active' : ''}`;
+    div.className = `server-btn ${srv.id === currentServer.id ? 'active' : ''}`;
     div.dataset.region = srv.region;
-    div.dataset.id = srv.id;
     div.innerHTML = `
       <div class="server-flag">${srv.flag}</div>
       <div class="server-name">${srv.name}</div>
       <div class="server-loc">${srv.loc}</div>
-      <div class="server-ping-badge" id="spb-${srv.id}">…</div>
+      <div class="server-ping-badge" id="spb-${srv.id}">Measuring...</div>
     `;
     div.onclick = () => {
       currentServer = srv;
       document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
       div.classList.add('active');
-      document.getElementById('gaugePhase').textContent = 'SERVER: ' + srv.name.toUpperCase();
+      document.getElementById('gaugePhase').textContent = `SERVER: ${srv.name.toUpperCase()}`;
     };
     grid.appendChild(div);
   });
@@ -326,40 +258,36 @@ function showRegion(region, tabEl) {
   document.querySelectorAll('.region-tab').forEach(t => t.classList.remove('active'));
   if (tabEl) tabEl.classList.add('active');
   document.querySelectorAll('.server-btn').forEach(btn => {
-    btn.classList.toggle('visible', region === 'all' || btn.dataset.region === region);
+    btn.style.display = (region === 'all' || btn.dataset.region === region) ? 'block' : 'none';
   });
 }
 
-function buildWorldGrid() {
-  // يمكن توسيعها لاحقاً
-  document.getElementById('pingWorldGrid').innerHTML = '<p style="grid-column:1/-1;color:var(--muted);text-align:center;padding:20px;">Global ping grid coming soon...</p>';
-}
-
-// ====================== Background Ping ======================
 async function pingAllInBackground() {
   for (const srv of SERVERS) {
     const ms = await measurePing(srv.pingUrl);
-    applyBadge(document.getElementById('spb-' + srv.id), ms);
-    await new Promise(r => setTimeout(r, 100));
+    const el = document.getElementById(`spb-${srv.id}`);
+    if (el) {
+      el.textContent = ms ? `${ms} ms` : 'N/A';
+      el.style.color = ms < 80 ? '#00ff88' : ms < 180 ? '#ffaa00' : '#ff4444';
+    }
+    await new Promise(r => setTimeout(r, 80));
   }
 }
 
-// ====================== IP Info ======================
 async function loadIP() {
   try {
-    const d = await (await fetch('https://ipapi.co/json/')).json();
+    const res = await fetch('https://ipapi.co/json/');
+    const d = await res.json();
     document.getElementById('ipAddr').textContent  = d.ip || 'N/A';
-    document.getElementById('ispName').textContent = d.org ? d.org.substring(0,25) : 'N/A';
-    document.getElementById('locName').textContent = `${d.city||''}, ${d.country_code||''}`;
+    document.getElementById('ispName').textContent = d.org ? d.org.substring(0,28) : 'N/A';
+    document.getElementById('locName').textContent = `${d.city || ''}, ${d.country_code || ''}`;
   } catch(e) {}
 }
 
-// ====================== Gauge & UI Helpers ======================
-function setGauge(val, max) {
+function setGauge(val, max = 100) {
   const pct = Math.min(val / max, 1);
   document.getElementById('gaugeFill').style.strokeDashoffset = 251 - (251 * pct);
   document.getElementById('gaugeVal').textContent = Math.round(val);
-  document.getElementById('gaugeFill').style.stroke = pct < 0.3 ? '#ff4444' : pct < 0.6 ? '#ff7043' : '#00e5ff';
 }
 
 function setProgress(pct, label) {
@@ -368,139 +296,72 @@ function setProgress(pct, label) {
   document.getElementById('progressPct').textContent = pct > 0 ? pct + '%' : '';
 }
 
-function setActive(id) {
-  ['box-ping','box-dl','box-ul'].forEach(b => {
-    const el = document.getElementById(b);
-    el.classList.remove('active','done');
-    if (b === id) el.classList.add('active');
-  });
-}
-
-function setDone(id) {
-  const el = document.getElementById(id);
-  el.classList.remove('active');
-  el.classList.add('done');
-}
-
-// ====================== Speed Tests ======================
 async function runDownload() {
   try {
-    const BYTES = 10_000_000; // 10MB
+    const BYTES = 15000000;
     const t0 = performance.now();
-    const resp = await fetch(WORKER + '/download?bytes=' + BYTES, {cache:'no-store'});
+    const resp = await fetch(WORKER_URL + '/download?bytes=' + BYTES, {cache:'no-store'});
     await resp.arrayBuffer();
     const secs = (performance.now() - t0) / 1000;
-    return ((BYTES / 1024 / 1024 * 8) / secs).toFixed(2);
+    return ((BYTES * 8 / 1024 / 1024) / secs).toFixed(1);
   } catch(e) { return '0'; }
 }
 
 async function runUpload() {
   try {
-    const SIZE_MB = 5;
+    const SIZE_MB = 8;
     const data = new Uint8Array(SIZE_MB * 1024 * 1024);
     const t0 = performance.now();
-    await fetch(WORKER + '/upload', {method:'POST', body: data, cache:'no-store'});
+    await fetch(WORKER_URL + '/upload', {method:'POST', body: data, cache:'no-store'});
     const secs = (performance.now() - t0) / 1000;
-    return ((SIZE_MB * 8) / secs).toFixed(2);
+    return ((SIZE_MB * 8) / secs).toFixed(1);
   } catch(e) { return '0'; }
 }
 
-// ====================== Rating & Nord ======================
-function getRating(dl, ping) {
-  const v = parseFloat(dl);
-  if (isNaN(v)) return {emoji:'📡', title:'Ping Only', desc:'Worker URL not configured yet.', cls:'tag-ok', label:'PING'};
-  if (v >= 50) return {emoji:'🚀', title:'Excellent!', desc:'Perfect for 4K, gaming & video calls.', cls:'tag-good', label:'FAST'};
-  if (v >= 15) return {emoji:'✅', title:'Good Connection', desc:'Suitable for HD streaming.', cls:'tag-ok', label:'GOOD'};
-  return {emoji:'🐢', title:'Slow Connection', desc:'Buffering may occur on HD content.', cls:'tag-bad', label:'SLOW'};
-}
-
-function showNordCard(dl, ping) {
-  document.getElementById('nordCard').classList.add('show');
-}
-
-// ====================== Main Test ======================
 async function startTest() {
   const btn = document.getElementById('btnStart');
   btn.disabled = true;
   btn.textContent = 'Testing...';
-
   document.getElementById('resultBox').classList.remove('show');
-  document.getElementById('nordCard').classList.remove('show');
 
   try {
-    // Ping
-    setActive('box-ping');
     setProgress(15, 'Testing Ping...');
     const ping = await measurePing(currentServer.pingUrl);
     document.getElementById('ping').textContent = ping || '?';
-    if (ping) setGauge(ping, 200);
-    setDone('box-ping');
+    setGauge(ping || 0, 200);
 
-    // Download
-    setActive('box-dl');
     setProgress(50, 'Testing Download...');
-    document.getElementById('gaugePhase').textContent = 'DOWNLOAD TEST';
-    document.getElementById('gaugeUnit').textContent = 'Mbps';
     const dl = await runDownload();
     document.getElementById('dl').textContent = dl;
-    setGauge(parseFloat(dl), 100);
-    setDone('box-dl');
+    setGauge(parseFloat(dl));
 
-    // Upload
-    setActive('box-ul');
-    setProgress(80, 'Testing Upload...');
-    document.getElementById('gaugePhase').textContent = 'UPLOAD TEST';
+    setProgress(85, 'Testing Upload...');
     const ul = await runUpload();
     document.getElementById('ul').textContent = ul;
-    setGauge(parseFloat(ul), 100);
-    setDone('box-ul');
 
     setProgress(100, 'Test Complete!');
     document.getElementById('gaugePhase').textContent = 'COMPLETE ✓';
 
-    const rating = getRating(dl, ping);
+    const rating = parseFloat(dl) >= 50 ? {emoji:'🚀', title:'Excellent!', desc:'Great for 4K streaming & gaming.'} :
+                   parseFloat(dl) >= 15 ? {emoji:'✅', title:'Good Connection', desc:'Suitable for HD video.'} :
+                   {emoji:'🐢', title:'Slow Connection', desc:'Consider upgrading your plan.'};
+
     document.getElementById('resultEmoji').textContent = rating.emoji;
     document.getElementById('resultTitle').textContent = rating.title;
     document.getElementById('resultDesc').textContent = rating.desc;
     document.getElementById('resultBox').classList.add('show');
-    showNordCard(dl, ping);
-
-    testHistory.unshift({
-      time: new Date().toLocaleTimeString(),
-      server: currentServer.name,
-      ping: ping || '?',
-      dl: dl,
-      ul: ul,
-      rating: rating
-    });
-    renderHistory();
 
   } catch (e) {
-    document.getElementById('gaugePhase').textContent = 'ERROR — Check Worker URL';
+    document.getElementById('gaugePhase').textContent = 'Error — Check Worker URL';
   }
 
   btn.disabled = false;
   btn.textContent = '▶ RUN AGAIN';
 }
 
-function renderHistory() {
-  const body = document.getElementById('historyBody');
-  if (!testHistory.length) return;
-  body.innerHTML = testHistory.slice(0, 8).map(r => `
-    <tr>
-      <td>${r.time}</td>
-      <td>${r.server}</td>
-      <td>${r.ping} ms</td>
-      <td>${r.dl} Mbps</td>
-      <td>${r.ul} Mbps</td>
-      <td class="${r.rating.cls}">${r.rating.label}</td>
-    </tr>
-  `).join('');
-}
-
-// ====================== Initialize ======================
+// Initialize
 buildServerGrid();
-buildWorldGrid();
+showRegion('all', document.querySelector('.region-tab'));
 loadIP();
 pingAllInBackground();
 </script>
