@@ -235,23 +235,15 @@
 
 <script>
 // ============================================================
-// رابط Worker الخاص بك
 // ============================================================
-const WORKER = 'https://YOUR_WORKER.workers.dev';   // ← غيّر هذا
+const WORKER = 'https://speed-ping-test.vercel.app';   // ← مهم جداً غيّره
 
-// ============================================================
-// قائمة السيرفرات الموسعة (أكثر من 30 موقع موثوق)
-// ============================================================
 const SERVERS = [
   { id: 'cf',      flag: '🌐', name: 'Cloudflare Global', loc: 'أقرب PoP',     pingUrl: 'https://speed.cloudflare.com/__ping', region: 'all' },
-  
-  // Americas
   { id: 'us-east', flag: '🇺🇸', name: 'USA East',   loc: 'New York / Virginia', pingUrl: 'https://ping.cloudflare.com', region: 'americas' },
   { id: 'us-west', flag: '🇺🇸', name: 'USA West',   loc: 'Los Angeles',       pingUrl: 'https://www.google.com', region: 'americas' },
   { id: 'ca',      flag: '🇨🇦', name: 'Canada',     loc: 'Toronto',           pingUrl: 'https://speed.cloudflare.com/__ping', region: 'americas' },
   { id: 'br',      flag: '🇧🇷', name: 'Brazil',     loc: 'São Paulo',         pingUrl: WORKER+'/ping', region: 'americas' },
-
-  // Europe (تركيز قوي)
   { id: 'fr',  flag: '🇫🇷', name: 'France',        loc: 'Paris',         pingUrl: 'https://ping.online.net', region: 'europe' },
   { id: 'de',  flag: '🇩🇪', name: 'Germany',       loc: 'Frankfurt',     pingUrl: 'https://speedtest.fra1.de.leaseweb.net', region: 'europe' },
   { id: 'gb',  flag: '🇬🇧', name: 'UK',            loc: 'London',        pingUrl: 'https://speedtest.lon1.uk.leaseweb.net', region: 'europe' },
@@ -261,14 +253,10 @@ const SERVERS = [
   { id: 'es',  flag: '🇪🇸', name: 'Spain',         loc: 'Madrid',        pingUrl: 'https://ping.cloudflare.com', region: 'europe' },
   { id: 'it',  flag: '🇮🇹', name: 'Italy',         loc: 'Milan',         pingUrl: WORKER+'/ping', region: 'europe' },
   { id: 'ch',  flag: '🇨🇭', name: 'Switzerland',   loc: 'Zurich',        pingUrl: WORKER+'/ping', region: 'europe' },
-
-  // MENA
   { id: 'ae',  flag: '🇦🇪', name: 'UAE',           loc: 'Dubai',         pingUrl: WORKER+'/ping', region: 'mena' },
   { id: 'sa',  flag: '🇸🇦', name: 'KSA',           loc: 'Riyadh',        pingUrl: WORKER+'/ping', region: 'mena' },
   { id: 'eg',  flag: '🇪🇬', name: 'Egypt',         loc: 'Cairo',         pingUrl: WORKER+'/ping', region: 'mena' },
   { id: 'ma',  flag: '🇲🇦', name: 'Morocco',       loc: 'Casablanca',    pingUrl: WORKER+'/ping', region: 'mena' },
-
-  // Asia-Pacific
   { id: 'jp',  flag: '🇯🇵', name: 'Japan',         loc: 'Tokyo',         pingUrl: 'https://speedtest.tyo11.jp.leaseweb.net', region: 'asia' },
   { id: 'sg',  flag: '🇸🇬', name: 'Singapore',     loc: 'Singapore',     pingUrl: 'https://speedtest.sin1.sg.leaseweb.net', region: 'asia' },
   { id: 'in',  flag: '🇮🇳', name: 'India',         loc: 'Mumbai',        pingUrl: WORKER+'/ping', region: 'asia' },
@@ -279,9 +267,7 @@ const SERVERS = [
 let currentServer = SERVERS[0];
 let testHistory = [];
 
-// ============================================================
-// دالة Ping محسنة
-// ============================================================
+// ====================== Helper Functions ======================
 async function measurePing(url) {
   const ROUNDS = 5;
   const samples = [];
@@ -305,29 +291,214 @@ function pingClass(ms) {
   return 'bad';
 }
 
-// باقي الكود الأصلي (build functions + test logic)
-function buildServerGrid() { /* ... نفس الكود الأصلي ... */ }
-function showRegion(region, tabEl) { /* ... نفس الكود الأصلي ... */ }
-function buildWorldGrid() { /* ... نفس الكود الأصلي ... */ }
-async function pingAllInBackground() { /* ... نفس الكود الأصلي ... */ }
-async function loadIP() { /* ... نفس الكود الأصلي ... */ }
-function setGauge(val, max) { /* ... */ }
-function setProgress(pct, label) { /* ... */ }
-function setActive(id) { /* ... */ }
-function setDone(id) { /* ... */ }
-async function runDownload() { /* ... نفس الكود الأصلي ... */ }
-async function runUpload() { /* ... نفس الكود الأصلي ... */ }
-function getRating(dl, ping) { /* ... */ }
-function showNordCard(dl, ping) { /* ... */ }
-
-async function startTest() {
-  // ... نفس الكود الأصلي مع استدعاء measurePing(currentServer.pingUrl) ...
-  // (انسخ الدالة كاملة من الكود الأصلي الذي أرسلته سابقاً)
+function applyBadge(el, ms) {
+  if (!el) return;
+  el.textContent = ms === null ? 'N/A' : ms + ' ms';
+  el.className = 'server-ping-badge ' + pingClass(ms);
 }
 
-function renderHistory() { /* ... نفس الكود الأصلي ... */ }
+// ====================== UI Builders ======================
+function buildServerGrid() {
+  const grid = document.getElementById('serverGrid');
+  grid.innerHTML = '';
+  SERVERS.forEach(srv => {
+    const div = document.createElement('div');
+    div.className = `server-btn visible ${srv.id === currentServer.id ? 'active' : ''}`;
+    div.dataset.region = srv.region;
+    div.dataset.id = srv.id;
+    div.innerHTML = `
+      <div class="server-flag">${srv.flag}</div>
+      <div class="server-name">${srv.name}</div>
+      <div class="server-loc">${srv.loc}</div>
+      <div class="server-ping-badge" id="spb-${srv.id}">…</div>
+    `;
+    div.onclick = () => {
+      currentServer = srv;
+      document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
+      div.classList.add('active');
+      document.getElementById('gaugePhase').textContent = 'SERVER: ' + srv.name.toUpperCase();
+    };
+    grid.appendChild(div);
+  });
+}
 
-// INIT
+function showRegion(region, tabEl) {
+  document.querySelectorAll('.region-tab').forEach(t => t.classList.remove('active'));
+  if (tabEl) tabEl.classList.add('active');
+  document.querySelectorAll('.server-btn').forEach(btn => {
+    btn.classList.toggle('visible', region === 'all' || btn.dataset.region === region);
+  });
+}
+
+function buildWorldGrid() {
+  // يمكن توسيعها لاحقاً
+  document.getElementById('pingWorldGrid').innerHTML = '<p style="grid-column:1/-1;color:var(--muted);text-align:center;padding:20px;">Global ping grid coming soon...</p>';
+}
+
+// ====================== Background Ping ======================
+async function pingAllInBackground() {
+  for (const srv of SERVERS) {
+    const ms = await measurePing(srv.pingUrl);
+    applyBadge(document.getElementById('spb-' + srv.id), ms);
+    await new Promise(r => setTimeout(r, 100));
+  }
+}
+
+// ====================== IP Info ======================
+async function loadIP() {
+  try {
+    const d = await (await fetch('https://ipapi.co/json/')).json();
+    document.getElementById('ipAddr').textContent  = d.ip || 'N/A';
+    document.getElementById('ispName').textContent = d.org ? d.org.substring(0,25) : 'N/A';
+    document.getElementById('locName').textContent = `${d.city||''}, ${d.country_code||''}`;
+  } catch(e) {}
+}
+
+// ====================== Gauge & UI Helpers ======================
+function setGauge(val, max) {
+  const pct = Math.min(val / max, 1);
+  document.getElementById('gaugeFill').style.strokeDashoffset = 251 - (251 * pct);
+  document.getElementById('gaugeVal').textContent = Math.round(val);
+  document.getElementById('gaugeFill').style.stroke = pct < 0.3 ? '#ff4444' : pct < 0.6 ? '#ff7043' : '#00e5ff';
+}
+
+function setProgress(pct, label) {
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = label;
+  document.getElementById('progressPct').textContent = pct > 0 ? pct + '%' : '';
+}
+
+function setActive(id) {
+  ['box-ping','box-dl','box-ul'].forEach(b => {
+    const el = document.getElementById(b);
+    el.classList.remove('active','done');
+    if (b === id) el.classList.add('active');
+  });
+}
+
+function setDone(id) {
+  const el = document.getElementById(id);
+  el.classList.remove('active');
+  el.classList.add('done');
+}
+
+// ====================== Speed Tests ======================
+async function runDownload() {
+  try {
+    const BYTES = 10_000_000; // 10MB
+    const t0 = performance.now();
+    const resp = await fetch(WORKER + '/download?bytes=' + BYTES, {cache:'no-store'});
+    await resp.arrayBuffer();
+    const secs = (performance.now() - t0) / 1000;
+    return ((BYTES / 1024 / 1024 * 8) / secs).toFixed(2);
+  } catch(e) { return '0'; }
+}
+
+async function runUpload() {
+  try {
+    const SIZE_MB = 5;
+    const data = new Uint8Array(SIZE_MB * 1024 * 1024);
+    const t0 = performance.now();
+    await fetch(WORKER + '/upload', {method:'POST', body: data, cache:'no-store'});
+    const secs = (performance.now() - t0) / 1000;
+    return ((SIZE_MB * 8) / secs).toFixed(2);
+  } catch(e) { return '0'; }
+}
+
+// ====================== Rating & Nord ======================
+function getRating(dl, ping) {
+  const v = parseFloat(dl);
+  if (isNaN(v)) return {emoji:'📡', title:'Ping Only', desc:'Worker URL not configured yet.', cls:'tag-ok', label:'PING'};
+  if (v >= 50) return {emoji:'🚀', title:'Excellent!', desc:'Perfect for 4K, gaming & video calls.', cls:'tag-good', label:'FAST'};
+  if (v >= 15) return {emoji:'✅', title:'Good Connection', desc:'Suitable for HD streaming.', cls:'tag-ok', label:'GOOD'};
+  return {emoji:'🐢', title:'Slow Connection', desc:'Buffering may occur on HD content.', cls:'tag-bad', label:'SLOW'};
+}
+
+function showNordCard(dl, ping) {
+  document.getElementById('nordCard').classList.add('show');
+}
+
+// ====================== Main Test ======================
+async function startTest() {
+  const btn = document.getElementById('btnStart');
+  btn.disabled = true;
+  btn.textContent = 'Testing...';
+
+  document.getElementById('resultBox').classList.remove('show');
+  document.getElementById('nordCard').classList.remove('show');
+
+  try {
+    // Ping
+    setActive('box-ping');
+    setProgress(15, 'Testing Ping...');
+    const ping = await measurePing(currentServer.pingUrl);
+    document.getElementById('ping').textContent = ping || '?';
+    if (ping) setGauge(ping, 200);
+    setDone('box-ping');
+
+    // Download
+    setActive('box-dl');
+    setProgress(50, 'Testing Download...');
+    document.getElementById('gaugePhase').textContent = 'DOWNLOAD TEST';
+    document.getElementById('gaugeUnit').textContent = 'Mbps';
+    const dl = await runDownload();
+    document.getElementById('dl').textContent = dl;
+    setGauge(parseFloat(dl), 100);
+    setDone('box-dl');
+
+    // Upload
+    setActive('box-ul');
+    setProgress(80, 'Testing Upload...');
+    document.getElementById('gaugePhase').textContent = 'UPLOAD TEST';
+    const ul = await runUpload();
+    document.getElementById('ul').textContent = ul;
+    setGauge(parseFloat(ul), 100);
+    setDone('box-ul');
+
+    setProgress(100, 'Test Complete!');
+    document.getElementById('gaugePhase').textContent = 'COMPLETE ✓';
+
+    const rating = getRating(dl, ping);
+    document.getElementById('resultEmoji').textContent = rating.emoji;
+    document.getElementById('resultTitle').textContent = rating.title;
+    document.getElementById('resultDesc').textContent = rating.desc;
+    document.getElementById('resultBox').classList.add('show');
+    showNordCard(dl, ping);
+
+    testHistory.unshift({
+      time: new Date().toLocaleTimeString(),
+      server: currentServer.name,
+      ping: ping || '?',
+      dl: dl,
+      ul: ul,
+      rating: rating
+    });
+    renderHistory();
+
+  } catch (e) {
+    document.getElementById('gaugePhase').textContent = 'ERROR — Check Worker URL';
+  }
+
+  btn.disabled = false;
+  btn.textContent = '▶ RUN AGAIN';
+}
+
+function renderHistory() {
+  const body = document.getElementById('historyBody');
+  if (!testHistory.length) return;
+  body.innerHTML = testHistory.slice(0, 8).map(r => `
+    <tr>
+      <td>${r.time}</td>
+      <td>${r.server}</td>
+      <td>${r.ping} ms</td>
+      <td>${r.dl} Mbps</td>
+      <td>${r.ul} Mbps</td>
+      <td class="${r.rating.cls}">${r.rating.label}</td>
+    </tr>
+  `).join('');
+}
+
+// ====================== Initialize ======================
 buildServerGrid();
 buildWorldGrid();
 loadIP();
