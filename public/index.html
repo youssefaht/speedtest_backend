@@ -21,13 +21,8 @@
     .orb-1{width:400px;height:400px;background:rgba(0,229,255,0.06);top:-100px;left:-100px}
     .orb-2{width:300px;height:300px;background:rgba(124,58,237,0.07);bottom:0;right:0}
     nav{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:24px 48px;border-bottom:1px solid var(--border)}
-    .logo{font-size:22px;font-weight:800;letter-spacing:-0.5px}.logo span{color:var(--accent)}
-    .nav-links{display:flex;gap:24px}.nav-links a{color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s}.nav-links a:hover{color:var(--accent)}
-    .surf-banner{position:relative;z-index:5;display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 20px;background:linear-gradient(90deg,rgba(0,10,40,.9),rgba(0,25,60,.9));border-bottom:1px solid rgba(0,120,255,.3);font-size:13px}
-    .surf-banner .surf-logo{font-weight:800;color:#00D4FF;font-size:15px}
-    .surf-banner .surf-text{color:var(--muted)}
-    .surf-banner .surf-cta{background:#00D4FF;color:#050810;font-weight:800;padding:5px 14px;border-radius:6px;text-decoration:none;font-size:12px;transition:opacity .2s;white-space:nowrap}
-    .surf-banner .surf-cta:hover{opacity:.85}
+    .logo{font-size:22px;font-weight:800;letter-spacing:-0.5px;cursor:pointer}.logo span{color:var(--accent)}
+    .nav-links{display:flex;gap:24px}.nav-links a{color:var(--muted);text-decoration:none;font-size:14px;transition:color .2s;cursor:pointer}.nav-links a:hover{color:var(--accent)}.nav-links a.active{color:var(--accent)}
     .hero{position:relative;z-index:5;text-align:center;padding:50px 24px 20px}
     .hero-label{display:inline-block;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.3);color:var(--accent);padding:4px 14px;border-radius:100px;font-size:12px;font-weight:600;letter-spacing:2px;margin-bottom:20px}
     .hero h1{font-size:clamp(28px,5vw,48px);font-weight:800;line-height:1.1}.hero h1 .highlight{color:var(--accent)}
@@ -76,18 +71,6 @@
     .result-box{display:none;margin-top:20px;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center}
     .result-box.show{display:block}
     .result-emoji{font-size:36px}.result-title{font-size:18px;font-weight:800;margin:8px 0 4px}.result-desc{font-size:13px;color:var(--muted)}
-    .surf-card{display:none;margin-top:16px;background:linear-gradient(135deg,#00061a,#001a35);border:1px solid rgba(0,212,255,.25);border-radius:16px;padding:22px}
-    .surf-card.show{display:block}
-    .surf-card-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-    .surf-card-logo{font-size:20px;font-weight:900;color:#00D4FF}
-    .surf-card-badge{background:rgba(0,212,255,.15);color:#00D4FF;font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;letter-spacing:1px}
-    .surf-card-title{font-size:15px;font-weight:700;margin-bottom:6px}
-    .surf-card-desc{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5}
-    .surf-card-features{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-    .surf-feat{background:rgba(255,255,255,.05);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--muted)}
-    .surf-btn{display:block;text-align:center;background:linear-gradient(135deg,#00D4FF,#0099cc);color:#050810;font-weight:800;font-size:14px;padding:13px;border-radius:10px;text-decoration:none;transition:opacity .2s}
-    .surf-btn:hover{opacity:.88}
-    .surf-disclaimer{font-size:10px;color:var(--muted);margin-top:8px;text-align:center}
     .global-ping-section{position:relative;z-index:5;max-width:720px;margin:0 auto 40px;padding:0 16px}
     .section-title{font-size:16px;font-weight:700;margin-bottom:12px;padding:0 4px}
     .section-sub{font-size:12px;color:var(--muted);margin-bottom:16px;padding:0 4px}
@@ -109,244 +92,89 @@
     .history-table tr:hover td{background:rgba(255,255,255,.02)}
     .tag-good{color:var(--green)}.tag-ok{color:var(--orange)}.tag-bad{color:var(--red)}
     footer{position:relative;z-index:5;text-align:center;padding:30px 24px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
-    footer a{color:var(--muted);text-decoration:underline}
-    @media(max-width:600px){nav{padding:16px 20px}.nav-links{display:none}.test-card{margin:16px 0;padding:24px 16px}.surf-banner{flex-wrap:wrap;gap:6px;font-size:12px}}
+    footer a{color:var(--muted);text-decoration:underline;cursor:pointer}
+    @media(max-width:600px){nav{padding:16px 20px}.nav-links{display:none}.test-card{margin:16px 0;padding:24px 16px}}
 
-    /* ============================================================
-       AI ASSISTANT STYLES
-    ============================================================ */
-    .ai-section {
-      position: relative;
-      z-index: 5;
-      max-width: 720px;
-      margin: 0 auto 40px;
-      padding: 0 16px;
-    }
+    /* AI ASSISTANT STYLES */
+    .ai-section{position:relative;z-index:5;max-width:720px;margin:0 auto 40px;padding:0 16px}
+    .ai-card{background:linear-gradient(135deg,#080f1f,#0d1628);border:1px solid rgba(124,58,237,0.35);border-radius:20px;overflow:hidden;box-shadow:0 0 40px rgba(124,58,237,0.08)}
+    .ai-header{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid rgba(124,58,237,0.2);background:rgba(124,58,237,0.06)}
+    .ai-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#00e5ff);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+    .ai-name{font-size:14px;font-weight:800;color:var(--text)}
+    .ai-status{font-size:11px;color:#7c3aed;font-weight:600;display:flex;align-items:center;gap:5px}
+    .ai-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(0.8)}}
+    .ai-badge{margin-left:auto;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:#a78bfa;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;letter-spacing:1px}
+    .ai-messages{height:320px;overflow-y:auto;padding:18px 22px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth}
+    .ai-messages::-webkit-scrollbar{width:4px}
+    .ai-messages::-webkit-scrollbar-track{background:transparent}
+    .ai-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+    .msg{display:flex;gap:10px;animation:msgIn 0.3s ease}
+    @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .msg.user{flex-direction:row-reverse}
+    .msg-avatar{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px}
+    .msg.ai .msg-avatar{background:linear-gradient(135deg,#7c3aed,#00e5ff)}
+    .msg.user .msg-avatar{background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,.3)}
+    .msg-bubble{max-width:80%;padding:11px 15px;border-radius:14px;font-size:13px;line-height:1.6}
+    .msg.ai .msg-bubble{background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.2);color:var(--text);border-top-left-radius:4px}
+    .msg.user .msg-bubble{background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.2);color:var(--text);border-top-right-radius:4px}
+    .msg-bubble strong{color:var(--accent)}
+    .typing-indicator{display:flex;gap:5px;padding:8px 12px;align-items:center}
+    .typing-dot{width:7px;height:7px;background:#7c3aed;border-radius:50%;animation:typingBounce 1.2s infinite}
+    .typing-dot:nth-child(2){animation-delay:0.2s}
+    .typing-dot:nth-child(3){animation-delay:0.4s}
+    @keyframes typingBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+    .ai-quick-btns{display:flex;gap:7px;flex-wrap:wrap;padding:10px 22px 0}
+    .quick-btn{background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.25);border-radius:100px;padding:5px 13px;font-size:11px;font-weight:600;color:#a78bfa;cursor:pointer;transition:all .2s;font-family:'Syne',sans-serif;white-space:nowrap}
+    .quick-btn:hover{background:rgba(124,58,237,0.18);border-color:rgba(124,58,237,0.5);color:#c4b5fd}
+    .ai-input-row{display:flex;gap:10px;padding:14px 22px 18px;align-items:center}
+    .ai-input{flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:11px 16px;font-size:13px;font-family:'Syne',sans-serif;color:var(--text);outline:none;transition:border-color .2s}
+    .ai-input:focus{border-color:rgba(124,58,237,0.5)}
+    .ai-input::placeholder{color:var(--muted)}
+    .ai-send{width:42px;height:42px;background:linear-gradient(135deg,#7c3aed,#5b21b6);border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:opacity .2s,transform .1s;flex-shrink:0}
+    .ai-send:hover{opacity:.85}
+    .ai-send:active{transform:scale(.94)}
+    .ai-send:disabled{opacity:.4;cursor:not-allowed}
+    .ai-powered-by{text-align:center;font-size:10px;color:var(--muted);padding-bottom:14px;letter-spacing:0.5px}
+    .ai-powered-by span{color:#7c3aed;font-weight:700}
 
-    .ai-card {
-      background: linear-gradient(135deg, #080f1f, #0d1628);
-      border: 1px solid rgba(124, 58, 237, 0.35);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 0 40px rgba(124, 58, 237, 0.08);
-    }
+    /* PAGE SECTIONS */
+    .page-section{display:none;position:relative;z-index:5;max-width:720px;margin:40px auto;padding:0 16px}
+    .page-section.active{display:block}
+    .page-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px}
+    .page-card h2{font-size:24px;font-weight:800;margin-bottom:8px;color:var(--text)}
+    .page-card .page-accent{color:var(--accent)}
+    .page-card .page-divider{height:1px;background:var(--border);margin:24px 0}
+    .page-card p{color:var(--muted);font-size:14px;line-height:1.8;margin-bottom:14px}
+    .page-card p:last-child{margin-bottom:0}
+    .page-card h3{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;margin-top:20px}
+    .contact-link{display:inline-flex;align-items:center;gap:8px;background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.2);border-radius:10px;padding:12px 20px;color:var(--accent);font-size:14px;font-weight:600;text-decoration:none;margin-top:8px;transition:background .2s}
+    .contact-link:hover{background:rgba(0,229,255,0.12)}
+    .policy-item{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px}
+    .policy-item-title{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:1px;margin-bottom:6px}
+    .policy-item p{margin-bottom:0;font-size:13px}
 
-    .ai-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 18px 22px;
-      border-bottom: 1px solid rgba(124, 58, 237, 0.2);
-      background: rgba(124, 58, 237, 0.06);
-    }
-
-    .ai-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #7c3aed, #00e5ff);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    .ai-header-info {}
-    .ai-name { font-size: 14px; font-weight: 800; color: var(--text); }
-    .ai-status { font-size: 11px; color: #7c3aed; font-weight: 600; display: flex; align-items: center; gap: 5px; }
-    .ai-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(0.8)} }
-
-    .ai-badge {
-      margin-left: auto;
-      background: rgba(124, 58, 237, 0.15);
-      border: 1px solid rgba(124, 58, 237, 0.3);
-      color: #a78bfa;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 100px;
-      letter-spacing: 1px;
-    }
-
-    .ai-messages {
-      height: 320px;
-      overflow-y: auto;
-      padding: 18px 22px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      scroll-behavior: smooth;
-    }
-
-    .ai-messages::-webkit-scrollbar { width: 4px; }
-    .ai-messages::-webkit-scrollbar-track { background: transparent; }
-    .ai-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-    .msg {
-      display: flex;
-      gap: 10px;
-      animation: msgIn 0.3s ease;
-    }
-    @keyframes msgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-
-    .msg.user { flex-direction: row-reverse; }
-
-    .msg-avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-    }
-
-    .msg.ai .msg-avatar { background: linear-gradient(135deg, #7c3aed, #00e5ff); }
-    .msg.user .msg-avatar { background: rgba(0, 229, 255, 0.15); border: 1px solid rgba(0,229,255,.3); }
-
-    .msg-bubble {
-      max-width: 80%;
-      padding: 11px 15px;
-      border-radius: 14px;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .msg.ai .msg-bubble {
-      background: rgba(124, 58, 237, 0.12);
-      border: 1px solid rgba(124, 58, 237, 0.2);
-      color: var(--text);
-      border-top-left-radius: 4px;
-    }
-
-    .msg.user .msg-bubble {
-      background: rgba(0, 229, 255, 0.1);
-      border: 1px solid rgba(0, 229, 255, 0.2);
-      color: var(--text);
-      border-top-right-radius: 4px;
-    }
-
-    .msg-bubble strong { color: var(--accent); }
-    .msg-bubble .vpn-tag {
-      display: inline-block;
-      background: rgba(0,229,255,0.1);
-      border: 1px solid rgba(0,229,255,0.2);
-      border-radius: 6px;
-      padding: 1px 7px;
-      font-size: 11px;
-      color: var(--accent);
-      font-family: 'DM Mono', monospace;
-      margin: 1px 2px;
-    }
-
-    .typing-indicator {
-      display: flex;
-      gap: 5px;
-      padding: 8px 12px;
-      align-items: center;
-    }
-    .typing-dot {
-      width: 7px; height: 7px;
-      background: #7c3aed;
-      border-radius: 50%;
-      animation: typingBounce 1.2s infinite;
-    }
-    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes typingBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
-
-    .ai-quick-btns {
-      display: flex;
-      gap: 7px;
-      flex-wrap: wrap;
-      padding: 10px 22px 0;
-    }
-
-    .quick-btn {
-      background: rgba(124, 58, 237, 0.08);
-      border: 1px solid rgba(124, 58, 237, 0.25);
-      border-radius: 100px;
-      padding: 5px 13px;
-      font-size: 11px;
-      font-weight: 600;
-      color: #a78bfa;
-      cursor: pointer;
-      transition: all .2s;
-      font-family: 'Syne', sans-serif;
-      white-space: nowrap;
-    }
-    .quick-btn:hover {
-      background: rgba(124, 58, 237, 0.18);
-      border-color: rgba(124, 58, 237, 0.5);
-      color: #c4b5fd;
-    }
-
-    .ai-input-row {
-      display: flex;
-      gap: 10px;
-      padding: 14px 22px 18px;
-      align-items: center;
-    }
-
-    .ai-input {
-      flex: 1;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 11px 16px;
-      font-size: 13px;
-      font-family: 'Syne', sans-serif;
-      color: var(--text);
-      outline: none;
-      transition: border-color .2s;
-    }
-    .ai-input:focus { border-color: rgba(124, 58, 237, 0.5); }
-    .ai-input::placeholder { color: var(--muted); }
-
-    .ai-send {
-      width: 42px;
-      height: 42px;
-      background: linear-gradient(135deg, #7c3aed, #5b21b6);
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 17px;
-      transition: opacity .2s, transform .1s;
-      flex-shrink: 0;
-    }
-    .ai-send:hover { opacity: .85; }
-    .ai-send:active { transform: scale(.94); }
-    .ai-send:disabled { opacity: .4; cursor: not-allowed; }
-
-    .ai-powered-by {
-      text-align: center;
-      font-size: 10px;
-      color: var(--muted);
-      padding-bottom: 14px;
-      letter-spacing: 0.5px;
-    }
-    .ai-powered-by span { color: #7c3aed; font-weight: 700; }
+    /* MAIN CONTENT wrapper */
+    #mainContent{display:block}
   </style>
 </head>
 <body>
 <div class="orb orb-1"></div><div class="orb orb-2"></div>
 
-<div class="surf-banner">
-  <span class="surf-logo">Surfshark</span>
-  <span class="surf-text">🛡️ 🦈 Browse securely &amp; privately</span>
-  <a class="surf-cta" href="https://surfshark.com/affiliate/YOUR_AFFILIATE_ID" target="_blank" rel="noopener">Try Surfshark Free →</a>
-</div>
-
 <nav>
-  <div class="logo">Fast<span>Check</span></div>
-  <div class="nav-links"><a href="#">Speed Test</a><a href="#">Ping Test</a><a href="#">About</a></div>
+  <div class="logo" onclick="showPage('home')">Fast<span>Check</span></div>
+  <div class="nav-links">
+    <a id="nav-home" class="active" onclick="showPage('home')">Speed Test</a>
+    <a id="nav-about" onclick="showPage('about')">About</a>
+    <a id="nav-privacy" onclick="showPage('privacy')">Privacy</a>
+    <a id="nav-contact" onclick="showPage('contact')">Contact</a>
+  </div>
 </nav>
+
+<!-- ============================================================
+     MAIN HOME CONTENT
+============================================================ -->
+<div id="mainContent">
 
 <div class="hero">
   <div class="hero-label">FREE &amp; ACCURATE</div>
@@ -356,7 +184,7 @@
 
 <div class="worker-notice">
   <div class="wn-box">
-    🌍 <span>Ping uses <strong>real servers</strong> per country · Download &amp; Upload via <strong>LibreSpeed</strong> public servers · No setup needed</span>
+    🌍 <span>Ping uses <strong>real servers</strong> per country · Download &amp; Upload via <strong>Cloudflare</strong> global network · No setup needed</span>
   </div>
 </div>
 
@@ -404,32 +232,13 @@
     <div class="result-title" id="resultTitle">—</div>
     <div class="result-desc" id="resultDesc">—</div>
   </div>
-  <div class="surf-card" id="surfCard">
-    <div class="surf-card-head">
-      <div class="surf-card-logo">Surfshark</div>
-      <div class="surf-card-badge" id="surfBadge">RECOMMENDED</div>
-    </div>
-    <div class="surf-card-title" id="surfCardTitle">Secure &amp; speed up your connection</div>
-    <div class="surf-card-desc" id="surfCardDesc">Surfshark can optimize your routing and protect your data.</div>
-    <div class="surf-card-features">
-      <div class="surf-feat">✓ 30-day money back</div>
-      <div class="surf-feat">✓ No logs policy</div>
-      <div class="surf-feat">✓ Unlimited devices</div>
-      <div class="surf-feat">✓ 3200+ servers</div>
-    </div>
-    <a class="surf-btn" href="https://surfshark.com/affiliate/YOUR_AFFILIATE_ID" target="_blank" rel="noopener">Get Surfshark – 30 Days Free →</a>
-    <div class="surf-disclaimer">Affiliate link · We earn a commission at no cost to you</div>
-  </div>
 </div>
 </div>
 
-<!-- ============================================================
-     AI ASSISTANT SECTION
-============================================================ -->
+<!-- AI ASSISTANT -->
 <div class="ai-section">
   <div class="section-title">🤖 AI Network Assistant</div>
-  <div class="section-sub">Ask anything about your connection, VPNs, gaming servers & more — powered by AI</div>
-
+  <div class="section-sub">Ask anything about your connection, VPNs, gaming servers &amp; more — powered by AI</div>
   <div class="ai-card">
     <div class="ai-header">
       <div class="ai-avatar">🤖</div>
@@ -439,7 +248,6 @@
       </div>
       <div class="ai-badge">AI POWERED</div>
     </div>
-
     <div class="ai-messages" id="aiMessages">
       <div class="msg ai">
         <div class="msg-avatar">🤖</div>
@@ -450,7 +258,6 @@
         </div>
       </div>
     </div>
-
     <div class="ai-quick-btns" id="quickBtns">
       <button class="quick-btn" onclick="sendQuick('Best VPN server for Valorant?')">🎮 VPN for Valorant</button>
       <button class="quick-btn" onclick="sendQuick('Best VPN server for Fortnite?')">🎯 VPN for Fortnite</button>
@@ -459,7 +266,6 @@
       <button class="quick-btn" onclick="sendQuick('Which VPN is best for streaming Netflix?')">🎬 VPN for Netflix</button>
       <button class="quick-btn" onclick="sendQuick('How can I reduce my ping for gaming?')">⚡ Reduce ping tips</button>
     </div>
-
     <div class="ai-input-row">
       <input class="ai-input" id="aiInput" type="text"
         placeholder="Ask about VPNs, gaming servers, your results..."
@@ -467,7 +273,6 @@
       />
       <button class="ai-send" id="aiSendBtn" onclick="sendAI()">➤</button>
     </div>
-
     <div class="ai-powered-by">Powered by <span>Groq · Llama 3.3</span> · Responses are AI-generated suggestions</div>
   </div>
 </div>
@@ -486,12 +291,104 @@
   </table>
 </div>
 
+</div><!-- end #mainContent -->
+
+<!-- ============================================================
+     ABOUT PAGE
+============================================================ -->
+<div id="page-about" class="page-section">
+  <div class="page-card">
+    <div class="hero-label" style="margin-bottom:16px">ABOUT</div>
+    <h2>About <span class="page-accent">FastCheck</span></h2>
+    <div class="page-divider"></div>
+    <p>FastCheck is a free, real-time internet speed test tool. We help users worldwide measure their download speed, upload speed, and ping with accuracy — no sign-up, no tracking. Built for gamers, streamers, and everyday users who want to know the truth about their connection.</p>
+    <p>Our measurements use Cloudflare's global infrastructure and real cloud servers (AWS, Azure, GCP) distributed across 18+ countries, giving you an honest picture of your connection performance — not just to a single point, but to the world.</p>
+    <h3>What we measure</h3>
+    <p><strong style="color:var(--accent)">Download speed</strong> — How fast data travels from the internet to your device. Affects streaming quality, page load times, and file downloads.</p>
+    <p><strong style="color:var(--accent)">Upload speed</strong> — How fast your device sends data. Critical for video calls, live streaming, and cloud backups.</p>
+    <p><strong style="color:var(--accent)">Ping (latency)</strong> — The round-trip time between your device and a server. The most important metric for online gaming and real-time communication.</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     PRIVACY POLICY PAGE
+============================================================ -->
+<div id="page-privacy" class="page-section">
+  <div class="page-card">
+    <div class="hero-label" style="margin-bottom:16px">PRIVACY</div>
+    <h2>Privacy <span class="page-accent">Policy</span></h2>
+    <div class="page-divider"></div>
+
+    <div class="policy-item">
+      <div class="policy-item-title">DATA COLLECTION</div>
+      <p>FastCheck does not collect, store, or sell any personal data. We use your IP address temporarily to detect your location for server selection only — it is never logged.</p>
+    </div>
+
+    <div class="policy-item">
+      <div class="policy-item-title">THIRD-PARTY SERVICES</div>
+      <p>Third-party services used: ipapi.co (IP detection), Cloudflare Speed Test (speed measurement). These services operate under their own privacy policies.</p>
+    </div>
+
+    <div class="policy-item">
+      <div class="policy-item-title">ADVERTISING</div>
+      <p>This site displays advertisements from Google AdSense and other advertising partners, which may use cookies to show relevant ads. We are not responsible for the content of third-party ads.</p>
+    </div>
+
+    <div class="policy-item">
+      <div class="policy-item-title">AFFILIATE LINKS</div>
+      <p>This site contains affiliate links. We may earn a commission at no cost to you when you click these links and make a purchase.</p>
+    </div>
+
+    <div class="policy-item">
+      <div class="policy-item-title">AGREEMENT</div>
+      <p>By using FastCheck, you agree to these terms.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     CONTACT PAGE
+============================================================ -->
+<div id="page-contact" class="page-section">
+  <div class="page-card">
+    <div class="hero-label" style="margin-bottom:16px">CONTACT</div>
+    <h2>Get in <span class="page-accent">Touch</span></h2>
+    <div class="page-divider"></div>
+    <p>Have a question, found a bug, or want to discuss advertising? We'd love to hear from you.</p>
+    <a class="contact-link" href="mailto:ahhyyussef@gmail.com">
+      ✉️ ahhyyussef@gmail.com
+    </a>
+    <p style="margin-top:20px">For questions, feedback, or advertising inquiries.</p>
+  </div>
+</div>
+
 <footer>
-  <p>FastCheck Speed Test · Free &amp; Private · <a href="#">Privacy Policy</a></p>
+  <p>FastCheck Speed Test · Free &amp; Private ·
+    <a onclick="showPage('privacy')">Privacy Policy</a> ·
+    <a onclick="showPage('about')">About</a> ·
+    <a onclick="showPage('contact')">Contact</a>
+  </p>
   <p style="margin-top:6px;font-size:11px">This site contains affiliate links. We may earn a commission at no cost to you.</p>
 </footer>
 
 <script>
+// ============================================================
+// PAGE NAVIGATION
+// ============================================================
+function showPage(page) {
+  const isHome = page === 'home';
+  document.getElementById('mainContent').style.display = isHome ? 'block' : 'none';
+  ['about','privacy','contact'].forEach(p => {
+    const el = document.getElementById('page-' + p);
+    if (el) el.classList.toggle('active', p === page);
+  });
+  ['home','about','privacy','contact'].forEach(p => {
+    const el = document.getElementById('nav-' + p);
+    if (el) el.classList.toggle('active', p === page);
+  });
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
 // ============================================================
 // WORLD SERVERS & SERVERS DATA
 // ============================================================
@@ -539,17 +436,11 @@ const SERVERS = [
 
 let currentServer = SERVERS[0];
 let testHistory = [];
-
-// ============================================================
-// AI ASSISTANT — using Claude API
-// ============================================================
-
-// Groq API Key — free at console.groq.com
-// API Key is now hidden in Cloudflare Worker
-
-// Store last test results for context
 let lastTestResults = null;
 
+// ============================================================
+// AI ASSISTANT
+// ============================================================
 function getTestContext() {
   if (!lastTestResults) return 'No speed test has been run yet on this session.';
   return `Latest speed test results:
@@ -588,21 +479,16 @@ let chatHistory = [];
 
 async function callClaudeAI(userMessage) {
   chatHistory.push({ role: 'user', content: userMessage });
-
   const contextMessage = `${getTestContext()}\n\nUser question: ${userMessage}`;
-
   const messages = chatHistory.length === 1
     ? [{ role: 'user', content: contextMessage }]
     : [
         { role: 'user', content: `${getTestContext()}\n\nUser question: ${chatHistory[0].content}` },
         ...chatHistory.slice(1)
       ];
-
   const response = await fetch('https://groq-api.youssefaht25.workers.dev', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
       max_tokens: 400,
@@ -612,15 +498,12 @@ async function callClaudeAI(userMessage) {
       ]
     })
   });
-
   if (!response.ok) {
     const err = await response.json().catch(() => ({}));
     throw new Error(err.error?.message || 'API error ' + response.status);
   }
-
   const data = await response.json();
   const reply = data.choices?.[0]?.message?.content || 'Sorry, I could not generate a response.';
-
   chatHistory.push({ role: 'assistant', content: reply });
   return reply;
 }
@@ -630,10 +513,7 @@ function appendMsg(role, text) {
   const div = document.createElement('div');
   div.className = `msg ${role}`;
   const avatar = role === 'ai' ? '🤖' : '👤';
-  div.innerHTML = `
-    <div class="msg-avatar">${avatar}</div>
-    <div class="msg-bubble">${text.replace(/\n/g, '<br>')}</div>
-  `;
+  div.innerHTML = `<div class="msg-avatar">${avatar}</div><div class="msg-bubble">${text.replace(/\n/g, '<br>')}</div>`;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
   return div;
@@ -644,16 +524,7 @@ function showTyping() {
   const div = document.createElement('div');
   div.className = 'msg ai';
   div.id = 'typingMsg';
-  div.innerHTML = `
-    <div class="msg-avatar">🤖</div>
-    <div class="msg-bubble">
-      <div class="typing-indicator">
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-      </div>
-    </div>
-  `;
+  div.innerHTML = `<div class="msg-avatar">🤖</div><div class="msg-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
 }
@@ -668,25 +539,19 @@ async function sendAI() {
   const btn = document.getElementById('aiSendBtn');
   const text = input.value.trim();
   if (!text) return;
-
   input.value = '';
   btn.disabled = true;
-
-  // Hide quick buttons after first message
   document.getElementById('quickBtns').style.display = 'none';
-
   appendMsg('user', text);
   showTyping();
-
   try {
     const reply = await callClaudeAI(text);
     removeTyping();
     appendMsg('ai', reply);
   } catch(e) {
     removeTyping();
-    appendMsg('ai', `⚠️ Connection error: ${e.message}<br><br>Make sure your Claude API key is configured correctly.`);
+    appendMsg('ai', `⚠️ Connection error: ${e.message}`);
   }
-
   btn.disabled = false;
   input.focus();
 }
@@ -696,14 +561,11 @@ function sendQuick(text) {
   sendAI();
 }
 
-// Auto-send analysis message after test completes
 function notifyAITestComplete(results) {
   lastTestResults = results;
-  // Show a subtle nudge
   const container = document.getElementById('aiMessages');
   const nudge = document.createElement('div');
   nudge.className = 'msg ai';
-  nudge.style.animation = 'msgIn 0.3s ease';
   nudge.innerHTML = `
     <div class="msg-avatar">🤖</div>
     <div class="msg-bubble">
@@ -901,72 +763,39 @@ function setDone(id) {
 }
 
 // ============================================================
-// CLOUDFLARE SPEED TEST — موثوق وCORS مدعوم دائماً
+// SPEED TEST
 // ============================================================
-
 const CF_DOWNLOAD_URL = 'https://speed.cloudflare.com/__down?bytes=';
 const CF_UPLOAD_URL   = 'https://speed.cloudflare.com/__up';
 
 async function runDownload() {
-  const SIZE = 10 * 1024 * 1024; // 10 MB
-
-  // warm-up صغير أولاً
-  try {
-    await fetch(CF_DOWNLOAD_URL + '1000000', {
-      cache: 'no-store',
-      signal: AbortSignal.timeout(5000)
-    });
-  } catch {}
-
-  // القياس الحقيقي
+  const SIZE = 10 * 1024 * 1024;
+  try { await fetch(CF_DOWNLOAD_URL + '1000000', { cache:'no-store', signal:AbortSignal.timeout(5000) }); } catch {}
   const t0 = performance.now();
-  const resp = await fetch(CF_DOWNLOAD_URL + SIZE + '&r=' + Math.random(), {
-    cache: 'no-store',
-    signal: AbortSignal.timeout(30000)
-  });
-
+  const resp = await fetch(CF_DOWNLOAD_URL + SIZE + '&r=' + Math.random(), { cache:'no-store', signal:AbortSignal.timeout(30000) });
   if (!resp.ok) throw new Error('Download failed: ' + resp.status);
   const buffer = await resp.arrayBuffer();
   const secs = (performance.now() - t0) / 1000;
   const bytes = buffer.byteLength;
-
   if (bytes < 100000) throw new Error('Download too small');
   return ((bytes / 1024 / 1024 * 8) / secs).toFixed(2);
 }
 
 async function runUpload() {
-  const SIZE_MB = 4; // 4 MB upload
+  const SIZE_MB = 4;
   const data = new Uint8Array(SIZE_MB * 1024 * 1024);
   crypto.getRandomValues(data.subarray(0, 4096));
-
-  // warm-up
   try {
     const warmData = new Uint8Array(100000);
-    await fetch(CF_UPLOAD_URL, {
-      method: 'POST',
-      body: warmData,
-      cache: 'no-store',
-      signal: AbortSignal.timeout(5000)
-    });
+    await fetch(CF_UPLOAD_URL, { method:'POST', body:warmData, cache:'no-store', signal:AbortSignal.timeout(5000) });
   } catch {}
-
-  // القياس الحقيقي
   const t0 = performance.now();
-  const resp = await fetch(CF_UPLOAD_URL, {
-    method: 'POST',
-    body: data,
-    cache: 'no-store',
-    signal: AbortSignal.timeout(30000)
-  });
-
+  const resp = await fetch(CF_UPLOAD_URL, { method:'POST', body:data, cache:'no-store', signal:AbortSignal.timeout(30000) });
   if (!resp.ok) throw new Error('Upload failed: ' + resp.status);
   const secs = (performance.now() - t0) / 1000;
   return ((SIZE_MB * 8) / secs).toFixed(2);
 }
 
-// ============================================================
-// RATING & SURFSHARK
-// ============================================================
 function getRating(dl, ping) {
   const v=parseFloat(dl), p=parseInt(ping);
   if (isNaN(v)) return {emoji:'📡',title:'Ping Only',desc:'Speed test unavailable.',cls:'tag-ok',label:'PING'};
@@ -975,26 +804,11 @@ function getRating(dl, ping) {
   return {emoji:'🐢',title:'Slow Connection',desc:'You may experience buffering on HD content.',cls:'tag-bad',label:'SLOW'};
 }
 
-function showNordCard(dl, ping) {
-  const v=parseFloat(dl), p=parseInt(ping);
-  const badge=document.getElementById('surfBadge'), title=document.getElementById('surfCardTitle'), desc=document.getElementById('surfCardDesc');
-  const slowP=!isNaN(p)&&p>70, slowD=!isNaN(v)&&v<25;
-  if (slowP&&slowD) { badge.textContent='⚠️ POOR CONNECTION'; title.textContent='High ping + slow speed detected'; desc.textContent=`${p}ms latency and ${v} Mbps download. Surfshark can reroute through faster paths.`; }
-  else if (slowP)   { badge.textContent='📡 HIGH LATENCY'; title.textContent=`Your ping is ${p}ms`; desc.textContent='Surfshark routes through optimized servers to reduce latency.'; }
-  else if (slowD)   { badge.textContent='🐢 SLOW DOWNLOAD'; title.textContent=`Download speed is ${v} Mbps`; desc.textContent='ISP throttling may be slowing you down. Surfshark encrypts traffic to prevent throttling.'; }
-  else              { badge.textContent='🛡️ STAY PROTECTED'; title.textContent='Great connection — protect your privacy'; desc.textContent='Your speed looks solid. Use Surfshark to stay private.'; }
-  document.getElementById('surfCard').classList.add('show');
-}
-
-// ============================================================
-// MAIN TEST
-// ============================================================
 async function startTest() {
   const btn = document.getElementById('btnStart');
   btn.disabled = true;
   btn.textContent = 'Testing...';
   document.getElementById('resultBox').classList.remove('show');
-  document.getElementById('surfCard').classList.remove('show');
   document.getElementById('gaugeUnit').textContent = 'ms';
   document.getElementById('gaugePhase').textContent = 'TESTING PING…';
   document.getElementById('ping').textContent = '—';
@@ -1035,13 +849,10 @@ async function startTest() {
     document.getElementById('resultTitle').textContent = rating.title;
     document.getElementById('resultDesc').textContent  = rating.desc;
     document.getElementById('resultBox').classList.add('show');
-    showNordCard(dl, pingDisplay);
 
     const results = { time:new Date().toLocaleTimeString(), server:currentServer.name, ping:pingDisplay, dl, ul, rating };
     testHistory.unshift(results);
     renderHistory();
-
-    // Notify AI about new test results
     notifyAITestComplete(results);
 
   } catch(e) {
@@ -1061,7 +872,7 @@ function renderHistory() {
   ).join('');
 }
 
-// ── INIT ──
+// INIT
 buildServerGrid();
 buildWorldGrid();
 loadIP();
