@@ -767,35 +767,73 @@ function setDone(id) {
 // ============================================================
 // SPEED TEST
 // ============================================================
-const CF_DOWNLOAD_URL = 'https://speed.cloudflare.com/__down?bytes=';
-const CF_UPLOAD_URL   = 'https://speed.cloudflare.com/__up';
+// All speed-test traffic goes to this project's own Vercel API.
+const API_BASE = `${window.location.origin}/api`;
+const DOWNLOAD_CHUNK_BYTES = 4 * 1024 * 1024; // Stay below Vercel's serverless response-size limit.
+const DOWNLOAD_CHUNKS = 3;
+const UPLOAD_BYTES = 2 * 1024 * 1024;
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = 30000) {
+  return fetch(url, { ...options, cache: 'no-store', signal: AbortSignal.timeout(timeoutMs) });
+}
 
 async function runDownload() {
-  const SIZE = 10 * 1024 * 1024;
-  try { await fetch(CF_DOWNLOAD_URL + '1000000', { cache:'no-store', signal:AbortSignal.timeout(5000) }); } catch {}
-  const t0 = performance.now();
-  const resp = await fetch(CF_DOWNLOAD_URL + SIZE + '&r=' + Math.random(), { cache:'no-store', signal:AbortSignal.timeout(30000) });
-  if (!resp.ok) throw new Error('Download failed: ' + resp.status);
-  const buffer = await resp.arrayBuffer();
-  const secs = (performance.now() - t0) / 1000;
-  const bytes = buffer.byteLength;
-  if (bytes < 100000) throw new Error('Download too small');
-  return ((bytes / 1024 / 1024 * 8) / secs).toFixed(2);
+  // Multiple small requests avoid oversized serverless responses and provide a larger sample.
+  const startedAt = performance.now();
+  const results = await Promise.all(Array.from({ length: DOWNLOAD_CHUNKS }, async () => {
+    const url = `${API_BASE}/download?bytes=${DOWNLOAD_CHUNK_BYTES}&r=${crypto.randomUUID()}`;
+    const response = await fetchWithTimeout(url, {}, 30000);
+    if (!response.ok) throw new Error(`Backend download failed (${response.status})`);
+    const data = await response.arrayBuffer();
+    if (!data.byteLength) throw new Error('Backend returned an empty download');
+    return data.byteLength;
+  }));
+  const elapsedSeconds = (performance.now() - startedAt) / 1000;
+  const totalBytes = results.reduce((sum, bytes) => sum + bytes, 0);
+  if (elapsedSeconds <= 0 || totalBytes === 0) throw new Error('Invalid download measurement');
+  return ((totalBytes * 8) / elapsedSeconds / 1_000_000).toFixed(2);
 }
 
 async function runUpload() {
-  const SIZE_MB = 4;
-  const data = new Uint8Array(SIZE_MB * 1024 * 1024);
-  crypto.getRandomValues(data.subarray(0, 4096));
-  try {
-    const warmData = new Uint8Array(100000);
-    await fetch(CF_UPLOAD_URL, { method:'POST', body:warmData, cache:'no-store', signal:AbortSignal.timeout(5000) });
-  } catch {}
-  const t0 = performance.now();
-  const resp = await fetch(CF_UPLOAD_URL, { method:'POST', body:data, cache:'no-store', signal:AbortSignal.timeout(30000) });
-  if (!resp.ok) throw new Error('Upload failed: ' + resp.status);
-  const secs = (performance.now() - t0) / 1000;
-  return ((SIZE_MB * 8) / secs).toFixed(2);
+  const data = new Uint8Array(UPLOAD_BYTES);
+  // Fill the payload so compression/deduplication cannot make the sample artificially small.
+  crypto.getRandomValues(data.subarray(0, 65536));
+  for (let offset = 65536; offset < data.length; offset += 65536) {
+    data.copyWithin(offset, 0, Math.min(65536, data.length - offset));
+  }
+  const startedAt = performance.now();
+  const response = await fetchWithTimeout(`${API_BASE}/upload`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/octet-stream' },
+    body: data
+  }, 30000);
+  if (!response.ok) throw new Error(`Backend upload failed (${response.status})`);
+  const result = await response.json();
+  const elapsedSeconds = (performance.now() - startedAt) / 1000;
+  if (result.received !== data.byteLength) {
+    throw new Error(`Upload size mismatch (${result.received || 0}/${data.byteLength} bytes)`);
+  }
+  if (elapsedSeconds <= 0) throw new Error('Invalid upload measurement');
+  return ((result.received * 8) / elapsedSeconds / 1_000_000).toFixed(2);
+}
+
+async function measureBackendPing() {
+  const samples = [];
+  const url = `${API_BASE}/ping?r=${crypto.randomUUID()}`;
+  // Warm-up request is not included in the median.
+  try { await fetchWithTimeout(url, {}, 5000); } catch {}
+  for (let i = 0; i < 5; i++) {
+    try {
+      const startedAt = performance.now();
+      const response = await fetchWithTimeout(`${url}&n=${i}`, {}, 5000);
+      if (!response.ok) continue;
+      samples.push(performance.now() - startedAt);
+    } catch {}
+    await new Promise(resolve => setTimeout(resolve, 40));
+  }
+  if (!samples.length) throw new Error('Could not reach this project’s ping endpoint');
+  samples.sort((a, b) => a - b);
+  return Math.round(samples[Math.floor(samples.length / 2)]);
 }
 
 function getRating(dl, ping) {
@@ -819,8 +857,8 @@ async function startTest() {
 
   try {
     setActive('box-ping');
-    setProgress(10, 'Testing ping to '+currentServer.name+'...');
-    const ping = await measurePing(currentServer.pingUrl);
+    setProgress(10, 'Testing ping to FastCheck backend...');
+    const ping = await measureBackendPing();
     const pingDisplay = ping !== null ? ping : '?';
     document.getElementById('ping').textContent = pingDisplay;
     if (ping) setGauge(Math.min(ping,200),200);
@@ -852,7 +890,7 @@ async function startTest() {
     document.getElementById('resultDesc').textContent  = rating.desc;
     document.getElementById('resultBox').classList.add('show');
 
-    const results = { time:new Date().toLocaleTimeString(), server:currentServer.name, ping:pingDisplay, dl, ul, rating };
+    const results = { time:new Date().toLocaleTimeString(), server:'FastCheck Backend (Vercel)', ping:pingDisplay, dl, ul, rating };
     testHistory.unshift(results);
     renderHistory();
     notifyAITestComplete(results);
