@@ -795,27 +795,31 @@ async function runDownload() {
 }
 
 async function runUpload() {
+  const UPLOAD_BYTES = 10 * 1024 * 1024; // 10 ميغابايت لقياس دقيق
   const data = new Uint8Array(UPLOAD_BYTES);
-  // Fill the payload so compression/deduplication cannot make the sample artificially small.
+  
   crypto.getRandomValues(data.subarray(0, 65536));
   for (let offset = 65536; offset < data.length; offset += 65536) {
     data.copyWithin(offset, 0, Math.min(65536, data.length - offset));
   }
+  
   const startedAt = performance.now();
+  
+  // سيتم إرسال الطلب لـ Vercel، وVercel سيوجهه تلقائياً لـ Cloudflare
   const response = await fetchWithTimeout(`${API_BASE}/upload`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/octet-stream' },
     body: data
   }, 30000);
-  if (!response.ok) throw new Error(`Backend upload failed (${response.status})`);
-  const result = await response.json();
+  
+  if (!response.ok) throw new Error(`Upload failed`);
+  
+  // لا تقم باستدعاء await response.json() هنا لأن Cloudflare لا ترسل JSON
   const elapsedSeconds = (performance.now() - startedAt) / 1000;
-  if (result.received !== data.byteLength) {
-    throw new Error(`Upload size mismatch (${result.received || 0}/${data.byteLength} bytes)`);
-  }
-  if (elapsedSeconds <= 0) throw new Error('Invalid upload measurement');
-  return ((result.received * 8) / elapsedSeconds / 1_000_000).toFixed(2);
+  
+  return ((data.byteLength * 8) / elapsedSeconds / 1_000_000).toFixed(2);
 }
+
 
 async function measureBackendPing() {
   const samples = [];
