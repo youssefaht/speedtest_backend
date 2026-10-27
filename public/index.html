@@ -848,6 +848,50 @@ function getRating(dl, ping) {
   return {emoji:'🐢',title:'Slow Connection',desc:'You may experience buffering on HD content.',cls:'tag-bad',label:'SLOW'};
 }
 
+// متغير لتخزين مؤقتات الحركة (Animations)
+let animIntervals = {};
+
+// دالة لبدء حركة الأرقام العشوائية
+function startAnimatingNumber(elementId, isPing = false) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  
+  // مسح أي حركة سابقة
+  if (animIntervals[elementId]) clearInterval(animIntervals[elementId]);
+  
+  // تغيير الأرقام كل 80 ميلي ثانية (لجعلها سريعة وممتعة)
+  animIntervals[elementId] = setInterval(() => {
+    let randomVal;
+    if (isPing) {
+      // توليد رقم بينج عشوائي بين 10 و 150
+      randomVal = Math.floor(Math.random() * 140) + 10;
+      setGauge(randomVal, 200);
+    } else {
+      // توليد رقم سرعة عشوائي بين 10 و 300
+      randomVal = (Math.random() * 290 + 10).toFixed(2);
+      setGauge(parseFloat(randomVal), 100);
+    }
+    el.textContent = randomVal;
+  }, 80);
+}
+
+// دالة لإيقاف الحركة وعرض النتيجة النهائية الحقيقية
+function stopAnimatingNumber(elementId, finalValue, maxGauge) {
+  if (animIntervals[elementId]) {
+    clearInterval(animIntervals[elementId]);
+    delete animIntervals[elementId];
+  }
+  const el = document.getElementById(elementId);
+  if (el) el.textContent = finalValue;
+  
+  // ضبط عداد السرعة الدائري على القيمة الحقيقية النهائية
+  const numericVal = parseFloat(finalValue);
+  if (!isNaN(numericVal)) {
+    setGauge(numericVal, maxGauge);
+  }
+}
+
+// دالة الاختبار الرئيسية المحدثة
 async function startTest() {
   const btn = document.getElementById('btnStart');
   btn.disabled = true;
@@ -860,34 +904,50 @@ async function startTest() {
   document.getElementById('ul').textContent = '—';
 
   try {
-        setActive('box-ping');
-    setProgress(10, 'Testing ping to nearest external server...');
-    // استخدام السيرفر الأقرب جغرافياً الذي تم تحديده تلقائياً (مثل Cloudflare) بدلاً من Vercel
-    const pingUrlToUse = currentServer ? currentServer.pingUrl : 'https://speed.cloudflare.com/__down?bytes=0';
+    // 1. فحص البينج
+    setActive('box-ping');
+    setProgress(10, `Testing ping to ${currentServer.name}...`);
+    
+    startAnimatingNumber('ping', true); // بدء الأرقام العشوائية للبينج
+    
+    const pingUrlToUse = currentServer.pingUrl; 
     const ping = await measurePing(pingUrlToUse);
     const pingDisplay = ping !== null ? ping : '?';
-
-    document.getElementById('ping').textContent = pingDisplay;
-    if (ping) setGauge(Math.min(ping,200),200);
+    
+    stopAnimatingNumber('ping', pingDisplay, 200); // إيقاف الحركة وعرض الرقم الحقيقي
     setDone('box-ping');
 
+    // 2. فحص التحميل
     setActive('box-dl');
-    setProgress(40,'Testing download speed...');
+    setProgress(40, 'Testing download speed...');
     document.getElementById('gaugePhase').textContent = 'DOWNLOAD TEST';
     document.getElementById('gaugeUnit').textContent = 'Mbps';
-    let dl='—', ul='—';
-    try { dl = await runDownload(); document.getElementById('dl').textContent=dl; setGauge(parseFloat(dl),100); }
-    catch { document.getElementById('dl').textContent='ERR'; dl='—'; }
+    let dl = '—', ul = '—';
+    
+    try { 
+        startAnimatingNumber('dl', false); // بدء الأرقام العشوائية للتحميل
+        dl = await runDownload(); 
+        stopAnimatingNumber('dl', dl, 100); // إيقاف وإظهار السرعة الحقيقية
+    } catch { 
+        stopAnimatingNumber('dl', 'ERR', 100);
+    }
     setDone('box-dl');
 
+    // 3. فحص الرفع
     setActive('box-ul');
-    setProgress(75,'Testing upload speed...');
+    setProgress(75, 'Testing upload speed...');
     document.getElementById('gaugePhase').textContent = 'UPLOAD TEST';
-    try { ul = await runUpload(); document.getElementById('ul').textContent=ul; setGauge(parseFloat(ul),100); }
-    catch { document.getElementById('ul').textContent='ERR'; ul='—'; }
+    
+    try { 
+        startAnimatingNumber('ul', false); // بدء الأرقام العشوائية للرفع
+        ul = await runUpload(); 
+        stopAnimatingNumber('ul', ul, 100); // إيقاف وإظهار السرعة الحقيقية
+    } catch { 
+        stopAnimatingNumber('ul', 'ERR', 100);
+    }
     setDone('box-ul');
 
-    setProgress(100,'Test complete!');
+    setProgress(100, 'Test complete!');
     document.getElementById('gaugePhase').textContent = 'COMPLETE ✓';
     setActive(null);
 
@@ -897,19 +957,20 @@ async function startTest() {
     document.getElementById('resultDesc').textContent  = rating.desc;
     document.getElementById('resultBox').classList.add('show');
 
-    const results = { time:new Date().toLocaleTimeString(), server:'FastCheck Backend (Vercel)', ping:pingDisplay, dl, ul, rating };
+    const results = { time:new Date().toLocaleTimeString(), server: currentServer.name, ping:pingDisplay, dl, ul, rating };
     testHistory.unshift(results);
     renderHistory();
     notifyAITestComplete(results);
 
   } catch(e) {
     document.getElementById('gaugePhase').textContent = 'ERROR';
-    setProgress(0,'Test failed: '+e.message);
+    setProgress(0, 'Test failed: ' + e.message);
   }
 
   btn.disabled = false;
   btn.textContent = '▶ RUN AGAIN';
 }
+
 
 function renderHistory() {
   const body = document.getElementById('historyBody');
