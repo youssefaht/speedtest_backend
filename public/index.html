@@ -856,10 +856,13 @@ async function startTest() {
   document.getElementById('ul').textContent = '—';
 
   try {
-    setActive('box-ping');
-    setProgress(10, 'Testing ping to FastCheck backend...');
-    const ping = await measureBackendPing();
+        setActive('box-ping');
+    setProgress(10, 'Testing ping to nearest external server...');
+    // استخدام السيرفر الأقرب جغرافياً الذي تم تحديده تلقائياً (مثل Cloudflare) بدلاً من Vercel
+    const pingUrlToUse = currentServer ? currentServer.pingUrl : 'https://speed.cloudflare.com/__down?bytes=0';
+    const ping = await measurePing(pingUrlToUse);
     const pingDisplay = ping !== null ? ping : '?';
+
     document.getElementById('ping').textContent = pingDisplay;
     if (ping) setGauge(Math.min(ping,200),200);
     setDone('box-ping');
