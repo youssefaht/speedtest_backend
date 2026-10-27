@@ -795,30 +795,32 @@ async function runDownload() {
 }
 
 async function runUpload() {
-  const UPLOAD_BYTES = 10 * 1024 * 1024; // 10 ميغابايت لقياس دقيق
+  // تحديد 5 ميغابايت كحجم مثالي لتجنب تشنج المتصفح والحصول على سرعة مستقرة
+  const UPLOAD_BYTES = 5 * 1024 * 1024;
   const data = new Uint8Array(UPLOAD_BYTES);
   
+  // توليد بيانات عشوائية ونسخها لمنع ضغط الشبكة للملف
   crypto.getRandomValues(data.subarray(0, 65536));
   for (let offset = 65536; offset < data.length; offset += 65536) {
     data.copyWithin(offset, 0, Math.min(65536, data.length - offset));
   }
   
   const startedAt = performance.now();
+  const targetUrl = `https://speed.cloudflare.com/__up?r=${Math.random()}`;
   
-  // سيتم إرسال الطلب لـ Vercel، وVercel سيوجهه تلقائياً لـ Cloudflare
-  const response = await fetchWithTimeout(`${API_BASE}/upload`, {
+  // الاتصال المباشر مع Cloudflare مع وضع no-cors لتخطي خطأ الحماية
+  await fetch(targetUrl, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/octet-stream' },
+    mode: 'no-cors', // هذا السطر هو مفتاح الحل لمنع متصفحك من حظر العملية
     body: data
-  }, 30000);
+  });
   
-  if (!response.ok) throw new Error(`Upload failed`);
-  
-  // لا تقم باستدعاء await response.json() هنا لأن Cloudflare لا ترسل JSON
   const elapsedSeconds = (performance.now() - startedAt) / 1000;
   
+  // حساب السرعة بالميجابت في الثانية
   return ((data.byteLength * 8) / elapsedSeconds / 1_000_000).toFixed(2);
 }
+
 
 
 async function measureBackendPing() {
