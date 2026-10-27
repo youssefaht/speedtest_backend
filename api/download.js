@@ -1,20 +1,25 @@
-// api/download.js
-export default function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Content-Type', 'application/octet-stream');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(204).end();
+async function runDownload() {
+  // إضافة رقم عشوائي (Math.random) لمنع المتصفح من قراءة الملف من الكاش تماماً
+  const url = `https://speed.cloudflare.com/__down?bytes=25000000&r=${Math.random()}`;
+  
+  const startedAt = performance.now();
+  const response = await fetch(url, { cache: 'no-store' });
+  
+  if (!response.ok) throw new Error('Download failed');
+  
+  // استخدام Stream لقراءة البيانات تدريجياً وقياس سرعة الشبكة الحقيقية
+  const reader = response.body.getReader();
+  let receivedLength = 0;
+  
+  while(true) {
+    const {done, value} = await reader.read();
+    if (done) break;
+    // حساب حجم البيانات المستقبلة فعلياً
+    receivedLength += value.length; 
   }
-
-  // حجم حقيقي: 16MB بدل 2MB مع إصلاح الحساب في الفرونت
-  const MB = parseInt(req.query.size) || 16;
-  const size = MB * 1024 * 1024;
-  const buffer = Buffer.alloc(size, 0xff);
-
-  res.setHeader('Content-Length', size);
-  res.send(buffer);
+  
+  const elapsedSeconds = (performance.now() - startedAt) / 1000;
+  
+  // حساب السرعة بالميجابت في الثانية
+  return ((receivedLength * 8) / elapsedSeconds / 1_000_000).toFixed(2);
 }
